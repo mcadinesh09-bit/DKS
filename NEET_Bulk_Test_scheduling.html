@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Batch + Test Input Merger</title>
+    <!-- Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom style for a subtle focus on editable table cells */
+        [contenteditable="true"]:focus {
+            outline: 2px solid #0ea5e9; /* sky-500 */
+            background-color: #f0f9ff; /* sky-50 */
+        }
+        /* Make table inputs blend in */
+        #inputTable input, #inputTable select {
+            width: 100%;
+            padding: 0.5rem;
+            border: none;
+            background-color: transparent;
+            font-size: 0.875rem; /* text-sm */
+            line-height: 1.25rem;
+        }
+        #inputTable input:focus, #inputTable select:focus {
+            outline: none;
+            ring-width: 0;
+        }
+        #inputTable td {
+            padding: 0;
+        }
+        #inputTable td[contenteditable="true"] {
+            padding: 0.5rem;
+        }
+        .status-toast {
+            animation: slideIn 0.5s forwards, fadeOut 0.5s 4.5s forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        /* Improved card styling */
+        .card {
+            background-color: white;
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1rem; /* p-4 - reduced from p-6 */
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); /* shadow-lg */
+            border-top: 4px solid #38bdf8; /* border-t-4 border-sky-400 */
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); /* shadow-2xl */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-slate-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-screen-xl">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-500 to-emerald-500">Batch List + Test Input Merger</h1>
+            <p class="text-sm text-slate-600 mt-2 max-w-2xl mx-auto">A tool to merge batch codes with test schedules and export the result.</p>
+            
+            <div class="mt-4 p-3 bg-sky-50 rounded-lg border border-sky-200 inline-block shadow-sm">
+                <p id="lastUpdated" class="text-xs text-slate-600 font-semibold"></p>
+                <div id="updateDetails" class="text-left text-xs text-slate-500 mt-2 space-y-1">
+                 <p>🌐 <span class="font-medium text-blue-700">Language Update:</span> All UI text is now in English.</p>
+                                <p>✅ <span class="font-medium text-emerald-700">New Feature:</span> MNAS is automatically included with MNA, and MEAS with MEA.</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Wrapper for Step A and B -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+            <!-- Step A: Batch File Upload -->
+            <div class="card">
+                <h2 class="text-base font-semibold text-slate-800 mb-2 flex items-center gap-2">
+                    <span class="bg-sky-100 text-sky-600 rounded-full p-2 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 1.1.9 2 2 2h12a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H6a2 2 0 00-2 2z" /></svg>
+                    </span>
+                    Step A — Upload Batch File
+                </h2>
+                <div class="mt-2">
+                    <label for="batchFile" class="w-full inline-flex justify-center items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                          <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                        </svg>
+                        Choose Batch File
+                    </label>
+                    <input id="batchFile" type="file" class="sr-only">
+                    <p class="text-xs text-center leading-5 text-slate-600 mt-2">XLSX, XLS, CSV</p>
+                </div>
+                <div id="batchInfo" class="mt-2 text-sm font-medium text-sky-700 h-5"></div>
+                <div class="flex items-center gap-3 flex-wrap mt-2">
+                    <button id="btnClearBatch" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-all duration-150 ease-in-out text-sm shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                        Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step B: Test Inputs -->
+            <div class="card">
+                <h2 class="text-base font-semibold text-slate-800 mb-2 flex items-center gap-2">
+                     <span class="bg-sky-100 text-sky-600 rounded-full p-2 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                    </span>
+                    Step B — Provide Test Inputs
+                </h2>
+                
+                <div class="mb-4">
+                    <div class="flex justify-between items-center mb-2 flex-wrap">
+                        <label class="block text-sm font-medium text-slate-700">Option 1 — Upload Test Details</label>
+                        <div class="flex items-center gap-4">
+                            <button id="btnDownloadTemplate1" class="text-sm font-semibold text-sky-600 hover:text-sky-700 flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+                                Template 1
+                            </button>
+                            <button id="btnDownloadTemplate2" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>
+                                Template 2
+                            </button>
+                        </div>
+                    </div>
+                     <div class="mt-2">
+                        <label for="testFile" class="w-full inline-flex justify-center items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                              <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                            </svg>
+                            Choose Test Details File
+                        </label>
+                        <input id="testFile" type="file" class="sr-only">
+                        <p class="text-xs text-center leading-5 text-slate-600 mt-2">XLSX, XLS, CSV</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- This section now contains the manual input table and generate buttons -->
+        <div class="card mb-8">
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-2">Option 2 — Manual Input Table (editable)</label>
+                <p class="text-xs text-slate-500 mb-3"><b>Note:</b> After importing a file, you can edit the values directly in this table before generating the output.</p>
+                <div class="flex items-center gap-3 flex-wrap">
+                    <button id="btnAddRow" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-150 ease-in-out text-sm shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>Add Row</button>
+                    <button id="btnDelRow" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-all duration-150 ease-in-out text-sm shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>Delete Last Row</button>
+                    <!-- Spacer -->
+                    <div class="flex-grow"></div>
+                    <!-- Fill All Times Controls -->
+                    <div class="flex items-center gap-2">
+                        <label for="globalTimeInput" class="text-sm font-medium text-slate-700 whitespace-nowrap">Fill all times:</label>
+                        <input type="time" id="globalTimeInput" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-sky-500 focus:border-sky-500 block p-1.5">
+                        <button id="btnFillTimes" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-150 ease-in-out text-sm shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-sky-400 focus:ring-offset-2">Apply</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto mt-4 rounded-lg border border-gray-200">
+                    <table id="inputTable" class="w-full border-collapse">
+                        <thead class="bg-slate-800 text-white">
+                            <tr>
+                                <th class="p-3 text-left text-sm font-semibold tracking-wider">Test batch</th>
+                                <th class="p-3 text-left text-sm font-semibold tracking-wider">Durations (in mins)</th>
+                                <th class="p-3 text-left text-sm font-semibold tracking-wider">TEST MODE</th>
+                                <th class="p-3 text-left text-sm font-semibold tracking-wider">Test Name</th>
+                                <th class="p-3 text-left text-sm font-semibold tracking-wider">test number</th>
+                                <th class="p-3 text-left text-sm font-semibold tracking-wider">Login WINDOW</th>
+                                <th class="p-3 text-left text-sm font-semibold tracking-wider">TEST DATE</th>
+                                <th class="p-3 text-left text-sm font-semibold tracking-wider">Test Start time</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white"></tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3 flex-wrap mb-8">
+                <button id="btnGenerate" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 px-5 rounded-lg transition-all duration-150 ease-in-out text-sm shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z" /><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" /></svg>Generate Output</button>
+                <button id="btnClearAll" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-150 ease-in-out text-sm shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-offset-2 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>Reset All Inputs</button>
+            </div>
+        </div>
+
+        <!-- Step C: Output -->
+        <div class="card">
+            <h2 class="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                <span class="bg-sky-100 text-sky-600 rounded-full p-2 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                </span>
+                Step C — Output Preview & Download
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 border-b pb-4">
+                <div>
+                    <label for="globalReattempt" class="block text-sm font-medium text-slate-700">Reattempt for All</label>
+                    <select id="globalReattempt" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <option value="Y" selected>Yes</option>
+                        <option value="N">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="globalNotification" class="block text-sm font-medium text-slate-700">Notification for All</label>
+                    <select id="globalNotification" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <option value="Y" selected>Yes</option>
+                        <option value="N">No</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3 flex-wrap mt-4">
+                <button id="btnDownloadXLSX" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-150 ease-in-out text-sm shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>Download XLSX</button>
+                <button id="btnDownloadCSV" class="bg-slate-500 hover:bg-slate-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-150 ease-in-out text-sm shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 flex items-center gap-2"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd" /></svg>Download CSV</button>
+            </div>
+            <div id="outCount" class="text-sm text-slate-600 mt-4 h-5"></div>
+            <div class="max-h-[420px] overflow-auto mt-4 rounded-lg border border-gray-200">
+                <table id="outTable" class="w-full border-collapse">
+                    <thead class="bg-slate-800/95 text-white sticky top-0 backdrop-blur-sm"></thead>
+                    <tbody class="divide-y divide-gray-200 bg-white"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Toast Area -->
+    <div id="statusContainer" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirmationModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full">
+            <h3 class="text-lg font-bold text-slate-800">Confirm Batch Addition</h3>
+            <p class="mt-2 text-sm text-slate-600">
+                Batch "MEa" was found in your input. Do you want to automatically include "MEPS" batches for these entries as well?
+            </p>
+            <div class="mt-6 flex justify-end gap-3">
+                <button id="btnConfirmNo" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg text-sm">No, Continue</button>
+                <button id="btnConfirmYes" class="bg-sky-500 hover:bg-sky-600 text-white font-semibold py-2 px-4 rounded-lg text-sm">Yes, Add MEPS</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script>
+        /* ====== Helper / State ====== */
+        const FIXED = {
+            type: "OBJECTIVE", eyCategory: "OTHER", syllabusLink: "https://drive.google.com/file/d/1NujvxCMbj1GfUikWEGU6hAupplU8r5WN/view?usp=drive_link",
+            showCalculator: "NO", rank: "NO_RANK", category: "CLASSROOM"
+        };
+        const OUTPUT_HEADERS = [
+            "Test Name", "Online Batches", "Offline Batches", "CBT Batches", "Optional Online Batches", "Optional Offline Batches", "Optional CBT Batches",
+            "Student Display Name", "Student Display Number", "Paper Number", "Type", "EY Category", "Start Time", "Duration in Minutes", "Login Window in Minutes",
+            "Syllabus PDF Link", "Show Calculator", "Rank", "Reattempt", "Category", "Report Header", "Notification", "Paper Code"
+        ];
+        let batchList = [], inputRows = [], outputRows = [];
+
+        /* ====== Utilities ====== */
+        function u(text) { return (text === undefined || text === null) ? '' : String(text).trim(); }
+        function splitAndTrim(val) { return String(val || '').split(',').map(s => s.trim()).filter(Boolean); }
+        function normalizeHeader(h) { return String(h || '').trim().toLowerCase().replace(/\s+/g, ''); }
+
+        function parseFullDateTime(dtStr) {
+            const dateRegex1 = /^(\d{1,2})\/(\d{1,2})\/(\d{4})\s*/;
+            const dateRegex2 = /^(\d{4})-(\d{2})-(\d{2})\s*/;
+            let datePart = '', timePart = '';
+            let match1 = dtStr.match(dateRegex1);
+            if (match1) {
+                datePart = `${match1[3]}-${match1[2].padStart(2, '0')}-${match1[1].padStart(2, '0')}`;
+                timePart = dtStr.substring(match1[0].length).trim();
+            } else {
+                let match2 = dtStr.match(dateRegex2);
+                if (match2) {
+                    datePart = match2[0].trim();
+                    timePart = dtStr.substring(match2[0].length).trim();
+                }
+            }
+            if (timePart) { timePart = parseTimeTo24(timePart); }
+            return { date: datePart, time: timePart };
+        }
+        
+        function parseTimeTo24(timeStr) {
+            if (!timeStr) return '';
+            let t = u(timeStr);
+            const m = t.match(/^(\d{1,2}):(\d{2}):(\d{2})\s*([AaPp][Mm])$/);
+            if (m) {
+                let hh = parseInt(m[1], 10);
+                const ap = m[4].toUpperCase();
+                if (hh === 12 && ap === 'AM') hh = 0;
+                if (hh < 12 && ap === 'PM') hh += 12;
+                return `${String(hh).padStart(2, '0')}:${m[2]}:${m[3]}`;
+            }
+            const m2 = t.match(/^(\d{1,2}):(\d{2})\s*([AaPp][Mm])$/);
+            if (m2) {
+                let hh = parseInt(m2[1], 10);
+                const ap = m2[3].toUpperCase();
+                if (hh === 12 && ap === 'AM') hh = 0;
+                if (hh < 12 && ap === 'PM') hh += 12;
+                return `${String(hh).padStart(2, '0')}:${m2[2]}:00`;
+            }
+            const m3 = t.match(/^(\d{1,2}):(\d{2}):(\d{2})$/);
+            if (m3) return `${String(m3[1]).padStart(2, '0')}:${m3[2]}:${m3[3]}`;
+            const m4 = t.match(/^(\d{1,2}):(\d{2})$/);
+            if (m4) return `${String(m4[1]).padStart(2, '0')}:${m4[2]}:00`;
+            return t;
+        }
+        
+        function ddmmFromISO(iso) { if (!iso) return ''; const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/); if (!m) return ''; return m[3] + m[2]; }
+        function generateReportHeader(testBatch) {
+            if (!testBatch) return ""; const tbUpper = u(testBatch).toUpperCase(); let header = "";
+            if (tbUpper.includes("MA")) header = "ACHIEVER COURSE-" + testBatch; else if (tbUpper.includes("ML")) header = "LEADER COURSE-" + testBatch;
+            else if (tbUpper.includes("ME")) header = "ENTHUSIAST COURSE-" + testBatch; else if (tbUpper.includes("MN")) header = "NURTURE COURSE-" + testBatch;
+            else if (tbUpper.includes("MTPS")) header = "NURTURE COURSE-" + testBatch; return header.toUpperCase();
+        }
+        function getSpecialOfflineBatch(reportHeader) {
+            if (!reportHeader) return ""; const headerUpper = reportHeader.toUpperCase();
+            if (headerUpper.includes("NURTURE")) return "K5MN-IAC-TEST33"; if (headerUpper.includes("ENTHUSIAST")) return "K5ME-1AC-TEST33";
+            if (headerUpper.includes("LEADER")) return "K5ML-1C-TEST33"; if (headerUpper.includes("ACHIEVER")) return "K5ML-1C-TEST33"; return "";
+        }
+        function isAdvancedBatchMatch(batchCode, token) {
+            const upperBatch = u(batchCode).toUpperCase(), upperToken = u(token).toUpperCase(); if (!upperToken) return false;
+            const segments = upperBatch.split('-'), hasDigit = (str) => /\d/.test(str);
+            for (const segment of segments) { if (segment.startsWith(upperToken)) { const rest = segment.substring(upperToken.length); if (rest === '' || hasDigit(rest)) return true; } } return false;
+        }
+        function showStatus(message, type = 'info') {
+            const container = document.getElementById('statusContainer');
+            const toast = document.createElement('div');
+            const colors = { info: 'bg-sky-500', success: 'bg-emerald-500', error: 'bg-red-500' };
+            toast.className = `status-toast text-white text-base font-semibold py-2 px-4 rounded-lg shadow-xl ${colors[type]}`;
+            toast.innerText = message;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 5000);
+        }
+
+        function parseTime(timeStr) {
+            const timeStrClean = String(timeStr || '').trim();
+            const match = timeStrClean.match(/(\d{1,2}):(\d{2})?\s*(AM|PM)?/i);
+            if (!match) return null;
+            let [_, hours, minutes, period] = match;
+            hours = parseInt(hours, 10);
+            minutes = minutes ? parseInt(minutes, 10) : 0;
+            period = period ? period.toUpperCase() : null;
+            if (period === 'PM' && hours < 12) hours += 12;
+            if (period === 'AM' && hours === 12) hours = 0; // Midnight case
+            const date = new Date();
+            date.setHours(hours, minutes, 0, 0);
+            return date;
+        }
+
+        function calculateLoginWindow(slot) {
+            const slotStr = String(slot || '');
+            if (!slotStr || (!slotStr.toUpperCase().includes('TO') && !slotStr.includes('-'))) return '1';
+            const times = slotStr.split(/TO|-/i).map(t => t.trim());
+            if (times.length !== 2) return '1';
+            const startTime = parseTime(times[0]); const endTime = parseTime(times[1]);
+            if (!startTime || !endTime) return '1';
+            if (endTime < startTime) { endTime.setDate(endTime.getDate() + 1); }
+            const diffInMilliseconds = endTime.getTime() - startTime.getTime();
+            const diffInMinutes = Math.round(diffInMilliseconds / (1000 * 60));
+            return diffInMinutes >= 0 ? diffInMinutes.toString() : '1';
+        }
+
+        function formatDate(dateInput) {
+            if (!dateInput) return '';
+            try {
+                let date;
+                if (typeof dateInput === 'number' && dateInput > 1000) {
+                    date = new Date(Math.round((dateInput - 25569) * 86400 * 1000));
+                } else if (dateInput instanceof Date) {
+                    date = dateInput;
+                } else if (typeof dateInput === 'string' && dateInput.includes('/')) {
+                    const parts = dateInput.split('/');
+                    date = new Date(parts[2], parts[1] - 1, parts[0]);
+                } else {
+                    date = new Date(dateInput);
+                }
+                if (isNaN(date.getTime())) { return ''; }
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const year = date.getFullYear();
+                return `${year}-${month}-${day}`;
+            } catch (e) { return ''; }
+        }
+
+        function formatTime(timeStr) {
+            if (!timeStr || typeof timeStr !== 'string') return timeStr || '';
+            const timeStrClean = timeStr.trim().toUpperCase();
+            let timePart = timeStrClean;
+            const ampmMatch = timeStrClean.match(/\s(AM|PM)/i);
+            if (ampmMatch) {
+                const timeStartIndex = timeStrClean.indexOf(ampmMatch[0]) - ampmMatch[0].length + 1;
+                timePart = timeStrClean.substring(timeStartIndex);
+            }
+            const timeMatch = timePart.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?/i);
+            if (!timeMatch) {
+                const simpleTimeMatch = timeStr.match(/^(\d{1,2}):(\d{2})$/);
+                if (simpleTimeMatch) {
+                    const date = new Date();
+                    date.setHours(parseInt(simpleTimeMatch[1], 10), parseInt(simpleTimeMatch[2], 10), 0, 0);
+                    return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+                }
+                return '';
+            }
+            let hours = parseInt(timeMatch[1], 10);
+            const minutes = timeMatch[2] ? parseInt(timeMatch[2], 10) : 0;
+            const period = timeMatch[4] ? timeMatch[4].toUpperCase() : (hours >= 12 ? 'PM' : 'AM');
+            if (period === 'PM' && hours < 12) hours += 12;
+            if (period === 'AM' && hours === 12) hours = 0; // Midnight case
+            const date = new Date();
+            date.setHours(hours, minutes, 0, 0);
+            const formattedHours = String(date.getHours()).padStart(2, '0');
+            const formattedMinutes = String(date.getMinutes()).padStart(2, '0');
+            return `${formattedHours}:${formattedMinutes}`;
+        }
+        
+        function formatTestMode(rawMode) {
+            if (!rawMode) return '';
+            const mode = String(rawMode).trim().toUpperCase();
+            if (mode.includes('OFFLINE ONLY')) return 'OFFLINE';
+            if (mode.includes('CBT ONLY')) return 'CBT';
+            if (mode.includes('ONLINE') && (mode.includes('OFFLINE') || mode.includes('CBT'))) { return 'ONLINE'; } 
+            else if (mode.includes('ONLINE ONLY')) { return 'ONLINE'; }
+            return mode;
+        }
+
+        function formatBatchName(rawName) {
+            if (!rawName) return '';
+            let nameStr = String(rawName).trim();
+            let formattedName = nameStr; 
+            const allBatchCodeMatches = nameStr.match(/\(([A-Z\s&,]{3,})\)/gi);
+            if (allBatchCodeMatches) {
+                const lastMatch = allBatchCodeMatches[allBatchCodeMatches.length - 1];
+                formattedName = lastMatch.substring(1, lastMatch.length - 1).trim();
+            } else {
+                const lastParenthesesMatch = nameStr.match(/\(([^)]+)\)[^()]*$/);
+                if (lastParenthesesMatch && lastParenthesesMatch[1]) {
+                    formattedName = lastParenthesesMatch[1].trim();
+                } else if (nameStr.includes(' - ')) {
+                    formattedName = nameStr.split(' - ')[0].trim();
+                }
+            }
+            return formattedName.replace(/&/g, ',');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            async function handleBatchFile(e) {
+                const f = e.target.files[0]; if (!f) return;
+                try {
+                    const arr = await f.arrayBuffer(), wb = XLSX.read(arr, { type: 'array' }), ws = wb.Sheets[wb.SheetNames[0]], json = XLSX.utils.sheet_to_json(ws, { defval: '' }); let codes = [];
+                    if (json.length && Object.keys(json[0]).some(k => u(k).toLowerCase() === 'batch_code')) { json.forEach(r => { const v = u(r['batch_code']); if (v) codes.push(...splitAndTrim(v)); }); }
+                    else { const arrayRows = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' }); arrayRows.forEach(r => { if (r && r[0]) codes.push(...splitAndTrim(r[0])); }); }
+                    const totalUniqueCodes = new Set(codes).size;
+                    const filteredCodes = codes.filter(c => {
+                        const uc = u(c).toUpperCase();
+                        return uc.startsWith('K5') || uc.startsWith('K6') || uc.startsWith('K7') || uc.startsWith('RC');
+                    });
+                    batchList = Array.from(new Set(filteredCodes)); 
+                    const message = `Total: ${totalUniqueCodes} batches. Loaded (K5/K6/K7/RC): ${batchList.length} batches.`;
+                    document.getElementById('batchInfo').innerText = message; 
+                    showStatus(message, 'success');
+                } catch (err) { console.error("Error processing batch file:", err); showStatus("Failed to process batch file.", 'error'); }
+            }
+            
+            async function handleTestFile(e) {
+                const f = e.target.files[0]; if (!f) return;
+                try {
+                    const arr = await f.arrayBuffer();
+                    const wb = XLSX.read(arr, { type: 'array' });
+                    const ws = wb.Sheets[wb.SheetNames[0]];
+                    const headers = XLSX.utils.sheet_to_json(ws, { header: 1, defval: '' })[0] || [];
+                    const normalizedHeaderText = headers.map(h => normalizeHeader(h));
+                    let parsed = [];
+                    if (normalizedHeaderText.includes('testbatch')) {
+                        const json = XLSX.utils.sheet_to_json(ws, { defval: '', raw: true, dateNF: 'YYYY-MM-DD', cellDates: true });
+                        json.forEach(r => {
+                            const keyMap = {};
+                            for (const key of Object.keys(r)) { const normalizedKey = normalizeHeader(key); if (!keyMap[normalizedKey]) { keyMap[normalizedKey] = key; } }
+                            const getVal = (normalizedCands) => { for (const c of normalizedCands) { const originalKey = keyMap[c]; if (originalKey) return r[originalKey]; } return ''; };
+                            const testBatch = u(getVal(['testbatch'])); if (!testBatch) return;
+                            const testDateRaw = getVal(['testdate']); const testStartRaw = getVal(['teststarttime']);
+                            let testDateStr = '', testStartStr = '';
+                            const fullDateTimeStr = u(testStartRaw); const parsedFullDateTime = parseFullDateTime(fullDateTimeStr);
+                            if (parsedFullDateTime.date && parsedFullDateTime.time) { testDateStr = parsedFullDateTime.date; testStartStr = parsedFullDateTime.time; } 
+                            else { testDateStr = formatDate(testDateRaw); testStartStr = formatTime(testStartRaw); }
+                            parsed.push({ testBatch: testBatch, duration: u(getVal(['durations(inmins)'])) || '', testMode: u(getVal(['testmode'])) || '', testName: u(getVal(['testname'])) || '', testNumber: u(getVal(['testnumber'])) || '', loginWindow: u(getVal(['loginwindow'])) || '', testDate: testDateStr || '', startTime: testStartStr || '' });
+                        });
+                    } else if (normalizedHeaderText.includes('testduration') && normalizedHeaderText.includes('coursename')) {
+                        const json = XLSX.utils.sheet_to_json(ws, { defval: '', raw: false });
+                        json.forEach(row => {
+                            const keyMap = {};
+                            for (const key of Object.keys(row)) { const normalizedKey = normalizeHeader(key); if (!keyMap[normalizedKey]) { keyMap[normalizedKey] = key; } }
+                            const findValue = (headerNameNormalized) => { const originalKey = keyMap[headerNameNormalized]; return originalKey ? row[originalKey] : ''; };
+                            const courseNameRaw = findValue('coursename'); const testDurationRaw = findValue('testduration'); const testModeRaw = findValue('testmode'); const testNameRaw = findValue('testname'); const loginSlot = findValue('paperstartlogintimeslot'); const testDateRaw = findValue('testdate');
+                            const courseName = formatBatchName(courseNameRaw); const testDuration = u(testDurationRaw).replace(/mins/gi, '').trim(); const testMode = formatTestMode(testModeRaw);
+                            const testNameMatch = u(testNameRaw).replace(/[\d-]/g, '').trim(); const testName = testNameMatch ? testNameMatch.toUpperCase().replace(/\s+/g, '_') : 'TEST';
+                            const testNumberMatch = u(testNameRaw).match(/\d+/); const testNumber = testNumberMatch ? testNumberMatch[0] : '';
+                            const loginWindow = calculateLoginWindow(loginSlot); const testDate = formatDate(testDateRaw);
+                            const rawStartTime = u(loginSlot).toUpperCase().includes('TO') || u(loginSlot).includes('-') ? u(loginSlot).split(/TO|-/i)[0].trim() : u(loginSlot);
+                            const testStartTime = formatTime(rawStartTime);
+                            parsed.push({ testBatch: courseName, duration: testDuration, testMode: testMode, testName: testName, testNumber: testNumber, loginWindow: loginWindow, testDate: testDate, startTime: testStartTime, });
+                        });
+                    } else { showStatus("Error: File headers do not match expected formats.", 'error'); return; }
+                    const tbody = document.querySelector('#inputTable tbody'); tbody.innerHTML = ''; parsed.forEach(r => insertInputRow(r)); showStatus(`Imported ${parsed.length} test rows into the table.`, 'success');
+                } catch (err) { console.error("Error processing test file:", err); showStatus("Failed to process test file.", 'error'); }
+            }
+
+            function insertInputRow(data = {}) {
+                const tbody = document.querySelector('#inputTable tbody'); const tr = tbody.insertRow(); tr.className = "hover:bg-gray-50";
+                const createEditableCell = (value) => { const cell = tr.insertCell(); cell.contentEditable = 'true'; cell.className = 'border-b border-slate-200 p-2 text-sm'; cell.innerText = value || ''; return cell; };
+                createEditableCell(data.testBatch); createEditableCell(data.duration);
+                const modeCell = tr.insertCell(); modeCell.className = 'border-b border-slate-200'; const modeSelect = document.createElement('select');
+                ['ONLINE', 'OFFLINE', 'CBT'].forEach(optionText => { const option = document.createElement('option'); option.value = optionText; option.text = optionText; if (data.testMode && u(data.testMode).toUpperCase() === optionText) option.selected = true; modeSelect.appendChild(option); });
+                modeCell.appendChild(modeSelect);
+                createEditableCell(data.testName); createEditableCell(data.testNumber); createEditableCell(data.loginWindow);
+                const dateCell = tr.insertCell(); dateCell.className = 'border-b border-slate-200'; const dateInput = document.createElement('input'); dateInput.type = 'date'; dateInput.value = data.testDate || ''; dateCell.appendChild(dateInput);
+                const timeCell = tr.insertCell(); timeCell.className = 'border-b border-slate-200'; const timeInput = document.createElement('input'); timeInput.type = 'time'; timeInput.value = data.startTime || ''; timeCell.appendChild(timeInput);
+            }
+
+            function importDataFromTable() {
+                inputRows = []; const tableRows = document.querySelectorAll('#inputTable tbody tr');
+                tableRows.forEach(tr => {
+                    const cells = tr.querySelectorAll('td'); if (cells.length < 8) return; const testBatch = u(cells[0].innerText); if (!testBatch) return;
+                    inputRows.push({ testBatch: testBatch, duration: u(cells[1].innerText), testMode: u(cells[2].querySelector('select').value), testName: u(cells[3].innerText), testNumber: u(cells[4].innerText), loginWindow: u(cells[5].innerText), testDate: u(cells[6].querySelector('input').value), startTime: u(cells[7].querySelector('input').value) });
+                });
+            }
+
+            function renderOutputTable() {
+                const thead = document.querySelector('#outTable thead'), tbody = document.querySelector('#outTable tbody');
+                thead.innerHTML = ''; tbody.innerHTML = '';
+                document.getElementById('outCount').innerText = `${outputRows.length} rows generated.`;
+                if (!outputRows.length) {
+                    tbody.innerHTML = `<tr><td colspan="${OUTPUT_HEADERS.length}" class="text-center p-8"><svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z" /></svg><h3 class="mt-2 text-sm font-medium text-gray-900">No output yet</h3><p class="mt-1 text-sm text-gray-500">Generate output to see the results here.</p></td></tr>`;
+                    return;
+                }
+                const trh = document.createElement('tr');
+                OUTPUT_HEADERS.forEach(h => { const th = document.createElement('th'); th.className = "p-3 text-left text-sm font-semibold tracking-wider"; th.innerText = h; trh.appendChild(th); });
+                thead.appendChild(trh);
+                outputRows.forEach(r => {
+                    const tr = document.createElement('tr'); tr.className = "hover:bg-gray-50";
+                    OUTPUT_HEADERS.forEach(h => { const td = document.createElement('td'); td.className = "p-3 text-sm text-gray-700"; td.innerText = r[h] ?? ''; tr.appendChild(td); });
+                    tbody.appendChild(tr);
+                });
+            }
+
+            function buildSheetFromOutput() { if (!outputRows.length) return null; const aoa = [OUTPUT_HEADERS]; outputRows.forEach(r => aoa.push(OUTPUT_HEADERS.map(h => r[h] ?? ''))); return XLSX.utils.aoa_to_sheet(aoa); }
+
+            document.getElementById('batchFile').addEventListener('change', handleBatchFile);
+            document.getElementById('testFile').addEventListener('change', handleTestFile);
+            
+            document.getElementById('btnDownloadTemplate1').addEventListener('click', () => {
+                const headers = ['Test batch', 'Durations (in mins)', 'TEST MODE', 'Test Name', 'test number', 'Login WINDOW', 'TEST DATE', 'Test Start time'];
+                const ws = XLSX.utils.aoa_to_sheet([headers]); const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Template1'); XLSX.writeFile(wb, 'Test_Input_Template_1.xlsx');
+                showStatus('Template 1 downloaded!', 'success');
+            });
+            document.getElementById('btnDownloadTemplate2').addEventListener('click', () => {
+                const headers = ['Sno.', 'Test Date', 'Center Name', 'Center Code', 'Stream', 'Session', 'Test Platform', 'Course Name', 'Course Code', 'Test Count', 'Exam Pattern', 'Exam Medium', 'Paper Start Login Time Slot', 'Test Duration', 'Tentative Students', 'Question Paper Code', 'Passkey', 'Test Name', 'Test Mode'];
+                const ws = XLSX.utils.aoa_to_sheet([headers]); const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, 'Template2'); XLSX.writeFile(wb, 'Test_Input_Template_2.xlsx');
+                showStatus('Template 2 downloaded!', 'success');
+            });
+            document.getElementById('btnClearBatch').addEventListener('click', () => { batchList = []; document.getElementById('batchFile').value = ''; document.getElementById('batchInfo').innerText = ''; showStatus('Batch list has been cleared.', 'info'); });
+            document.getElementById('btnAddRow').addEventListener('click', () => insertInputRow());
+            document.getElementById('btnDelRow').addEventListener('click', () => { const tbody = document.querySelector('#inputTable tbody'); if (tbody.rows.length > 0) tbody.deleteRow(tbody.rows.length - 1); });
+            document.getElementById('btnFillTimes').addEventListener('click', () => {
+                const globalTime = document.getElementById('globalTimeInput').value; if (!globalTime) { showStatus('Please select a time to apply first.', 'error'); return; }
+                const timeInputs = document.querySelectorAll('#inputTable tbody input[type="time"]'); if (timeInputs.length === 0) { showStatus('There are no rows to apply the time to.', 'info'); return; }
+                timeInputs.forEach(input => { input.value = globalTime; });
+                showStatus(`Applied time ${globalTime} to all ${timeInputs.length} rows.`, 'success');
+            });
+
+            let isConfirmingClear = false; let confirmTimeout;
+            document.getElementById('btnClearAll').addEventListener('click', () => {
+                const btn = document.getElementById('btnClearAll');
+                if (!isConfirmingClear) {
+                    isConfirmingClear = true;
+                    btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.03-1.742 3.03H4.42c-1.532 0-2.492-1.696-1.742-3.03l5.58-9.92zM10 5a1 1 0 011 1v3a1 1 0 11-2 0V6a1 1 0 011-1zm1 5a1 1 0 10-2 0v2a1 1 0 102 0v-2z" clip-rule="evenodd" /></svg>Confirm Reset?';
+                    btn.classList.remove('bg-red-600', 'hover:bg-red-700'); btn.classList.add('bg-yellow-500', 'hover:bg-yellow-600');
+                    confirmTimeout = setTimeout(() => {
+                        isConfirmingClear = false;
+                        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>Reset All Inputs';
+                        btn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600'); btn.classList.add('bg-red-600', 'hover:bg-red-700');
+                    }, 3000);
+                } else {
+                    clearTimeout(confirmTimeout); isConfirmingClear = false;
+                    btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm4 0a1 1 0 012 0v6a1 1 0 11-2 0V8z" clip-rule="evenodd" /></svg>Reset All Inputs';
+                    btn.classList.remove('bg-yellow-500', 'hover:bg-yellow-600'); btn.classList.add('bg-red-600', 'hover:bg-red-700');
+                    batchList = []; inputRows = []; outputRows = []; document.getElementById('batchFile').value = ''; document.getElementById('testFile').value = ''; document.getElementById('batchInfo').innerText = '';
+                    document.querySelector('#inputTable tbody').innerHTML = ''; insertInputRow({testBatch: 'MNA', duration: '30', testMode: 'ONLINE', testName: 'My Fun Test', testNumber: '101', loginWindow: '720', testDate: '2025-08-24', startTime: '08:00'}); renderOutputTable(); showStatus('All inputs and outputs cleared.', 'info');
+                }
+            });
+
+            // --- GENERATION LOGIC WITH CONFIRMATION ---
+
+            const confirmationModal = document.getElementById('confirmationModal');
+            const btnConfirmYes = document.getElementById('btnConfirmYes');
+            const btnConfirmNo = document.getElementById('btnConfirmNo');
+            
+            function showConfirmationModal() { confirmationModal.classList.remove('hidden'); }
+            function hideConfirmationModal() { confirmationModal.classList.add('hidden'); }
+
+            btnConfirmYes.addEventListener('click', () => {
+                proceedWithGeneration(true); // Add MEPS
+                hideConfirmationModal();
+            });
+
+            btnConfirmNo.addEventListener('click', () => {
+                proceedWithGeneration(false); // Do not add MEPS
+                hideConfirmationModal();
+            });
+
+            // Close modal if clicking outside the content
+            confirmationModal.addEventListener('click', (e) => {
+                if (e.target === confirmationModal) {
+                    hideConfirmationModal();
+                }
+            });
+
+            function proceedWithGeneration(addMeps = false) {
+                outputRows = [];
+                const globalReattemptValue = document.getElementById('globalReattempt').value;
+                const globalNotificationValue = document.getElementById('globalNotification').value;
+                
+                inputRows.forEach(r => {
+                    const tbField = u(r.testBatch);
+                    let tokens = splitAndTrim(tbField);
+                    if (tokens.length === 0) return;
+
+                    // Automatically add MNAS for MNA and MEAS for MEA
+                    const upperTokens = tokens.map(t => t.toUpperCase());
+                    if (upperTokens.includes('MNA')) {
+                        tokens.push('MNAS');
+                    }
+                    if (upperTokens.includes('MEA')) {
+                        tokens.push('MEAS');
+                    }
+
+                    // Add MEPS if confirmed and MEa is present in the original input
+                    const hasMea = splitAndTrim(tbField.toUpperCase()).includes('MEA');
+                    if (addMeps && hasMea) {
+                        tokens.push('MEPS');
+                    }
+
+                    let allMatchedBatches = [];
+                    [...new Set(tokens)].forEach(token => {
+                        const matched = batchList.filter(b => isAdvancedBatchMatch(b, token));
+                        allMatchedBatches.push(...matched);
+                    });
+
+                    const matchedBatchesStr = Array.from(new Set(allMatchedBatches)).join(', ');
+                    const testNameKey = tokens.join(','), ddmm = ddmmFromISO(u(r.testDate));
+                    const datePart = u(r.testDate), timePart24 = parseTimeTo24(u(r.startTime)); let fullStart = '';
+                    if (datePart && timePart24) fullStart = `${datePart} ${timePart24}`; else if (datePart) fullStart = datePart;
+                    const mode = u(r.testMode).toUpperCase(), studentDisplayName = u(r.testName), reportHeader = generateReportHeader(tbField);
+                    let finalTestName = "";
+                    if (studentDisplayName.toLowerCase().includes('fun')) { finalTestName = ddmm ? `${ddmm}_KOTA_FUN_TEST-${testNameKey}` : `KOTA_FUN_TEST-${testNameKey}`; }
+                    else { if (reportHeader) { finalTestName = ddmm ? `${ddmm}_KOTA_NEET_UG-${reportHeader}` : `KOTA_NEET_UG-${reportHeader}`; } else { finalTestName = ddmm ? `${ddmm}_KOTA_NEET_UG-${testNameKey}` : `KOTA_NEET_UG-${testNameKey}`; } }
+                    let offlineBatchValue = "";
+                    if (mode === 'OFFLINE') { offlineBatchValue = matchedBatchesStr; } else if (mode === 'ONLINE') { offlineBatchValue = getSpecialOfflineBatch(reportHeader); }
+                    const row = {
+                        "Test Name": finalTestName, "Online Batches": mode === 'ONLINE' ? matchedBatchesStr : '', "Offline Batches": offlineBatchValue, "CBT Batches": mode === 'CBT' ? matchedBatchesStr : '',
+                        "Optional Online Batches": "", "Optional Offline Batches": "", "Optional CBT Batches": "", "Student Display Name": studentDisplayName,
+                        "Student Display Number": u(r.testNumber), "Paper Number": "", "Type": FIXED.type, "EY Category": FIXED.eyCategory, "Start Time": fullStart,
+                        "Duration in Minutes": u(r.duration), "Login Window in Minutes": u(r.loginWindow), "Syllabus PDF Link": FIXED.syllabusLink,
+                        "Show Calculator": FIXED.showCalculator, "Rank": FIXED.rank, "Reattempt": globalReattemptValue, "Category": FIXED.category,
+                        "Report Header": reportHeader, "Notification": globalNotificationValue, "Paper Code": ""
+                    };
+                    outputRows.push(row);
+                });
+                renderOutputTable();
+                showStatus(`Successfully generated ${outputRows.length} rows!`, 'success');
+            }
+
+            document.getElementById('btnGenerate').addEventListener('click', () => {
+                importDataFromTable();
+                if (batchList.length === 0) { showStatus('Please upload a batch file in Step A first.', 'error'); return; }
+                if (inputRows.length === 0) { showStatus('There is no data in the table to generate.', 'error'); return; }
+                const isMeaPresent = inputRows.some(r => splitAndTrim(u(r.testBatch).toUpperCase()).includes('MEA'));
+                if (isMeaPresent) {
+                    showConfirmationModal();
+                } else {
+                    proceedWithGeneration(false); // Proceed directly
+                }
+            });
+            
+            document.getElementById('btnDownloadXLSX').addEventListener('click', () => { const ws = buildSheetFromOutput(); if (!ws) { showStatus('No output to download.', 'error'); return; } const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Sheet1'); XLSX.writeFile(wb, `test_output_${new Date().toISOString().slice(0,10)}.xlsx`); });
+            document.getElementById('btnDownloadCSV').addEventListener('click', () => { const ws = buildSheetFromOutput(); if (!ws) { showStatus('No output to download.', 'error'); return; } const csv = XLSX.utils.sheet_to_csv(ws); saveAs(new Blob([csv], {type:'text/csv;charset=utf-8'}), `test_output_${new Date().toISOString().slice(0,10)}.csv`); });
+            
+            const inputTableBody = document.querySelector('#inputTable tbody');
+            inputTableBody.addEventListener('paste', (e) => {
+                if (e.target.tagName === 'INPUT' && e.target.type === 'time') {
+                    e.preventDefault();
+                    const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+                    const formattedTime = parseTimeTo24(pastedText);
+                    if (formattedTime && formattedTime.match(/^\d{2}:\d{2}(:\d{2})?$/)) { e.target.value = formattedTime.slice(0, 5); } 
+                    else { showStatus(`Pasted time "${pastedText}" is not in a recognized format.`, 'error'); }
+                }
+            });
+
+            insertInputRow({ testBatch: 'MNA', duration: '30', testMode: 'ONLINE', testName: 'My Fun Test', testNumber: '101', loginWindow: '720', testDate: '2025-08-24', startTime: '08:00' });
+            renderOutputTable();
+
+            document.getElementById('lastUpdated').innerText = 'Last Updated: 22 September 2025, 01:35 PM';
+        });
+    </script>
+
+</body>
+</html>
+
