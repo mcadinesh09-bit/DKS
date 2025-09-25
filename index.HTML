@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>मेरी फ़ाइलें</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5;
+            color: #1f2937;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+        }
+        h1 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+        .file-list {
+            list-style: none;
+            padding: 0;
+        }
+        .file-item {
+            background-color: #eef2ff;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            padding: 1.25rem 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .file-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+        }
+        .file-item a {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: block;
+        }
+        .file-item p {
+            margin: 0.5rem 0 0;
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+        .file-item .file-name {
+            font-weight: 700;
+            color: #003366;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>मेरी सभी फ़ाइलें</h1>
+        <ul class="file-list">
+            <!-- यहाँ अपनी फ़ाइलों के लिंक डालें -->
+            <li class="file-item">
+                <a href="race.html">
+                    <span class="file-name">ALLEN Result Generator</span>
+                </a>
+                <p>यह ALLEN के लिए एक परिणाम जनरेटर है।</p>
+            </li>
+            <li class="file-item">
+                <a href="jee-dat-to-excel.html">
+                    <span class="file-name">DAT File to Table Converter</span>
+                </a>
+                <p>यह एक .dat फ़ाइल को तालिका में बदलता है।</p>
+            </li>
+            <li class="file-item">
+                <a href="project-report.pdf">
+                    <span class="file-name">प्रोजेक्ट रिपोर्ट</span>
+                </a>
+                <p>यह मेरे हाल के प्रोजेक्ट की विस्तृत रिपोर्ट है।</p>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

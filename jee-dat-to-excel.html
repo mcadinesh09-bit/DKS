@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JEE-DAT File to Excel Converter</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f9fafb;
+      padding: 30px;
+      color: #1e293b;
+    }
+    h2 {
+      margin-bottom: 20px;
+      color: #0f172a;
+    }
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    .tab {
+      padding: 8px 14px;
+      background: #e2e8f0;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .tab.active {
+      background: #3b82f6;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+    input[type="file"], input[type="number"] {
+      padding: 6px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #fff;
+      cursor: pointer;
+    }
+    button {
+      padding: 8px 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    button.download {
+      background: #3b82f6;
+      color: white;
+    }
+    button.download:hover {
+      background: #2563eb;
+    }
+    button.clear {
+      background: #ef4444;
+      color: white;
+    }
+    button.clear:hover {
+      background: #dc2626;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 11px;
+      white-space: pre;
+      color: black;
+    }
+    th, td {
+      border: 1px solid #e2e8f0;
+      padding: 4px 6px;
+      text-align: center;
+    }
+    th {
+      background-color: black;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .scroll-table {
+      max-height: 500px;
+      overflow: auto;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: white;
+      padding: 4px;
+    }
+    #tableContainer {
+      font-size: 13px;
+      color: #000;
+    }
+    #recordCount {
+      margin-top: 10px;
+      font-weight: bold;
+      color: #334155;
+    }
+    /* Style for the custom message box */
+    #messageBox {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 20px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: opacity 0.3s;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+  <h2>📂 DAT File to Excel Converter</h2>
+  <p style="font-size: 13px; color: #475569; margin-top:-15px; margin-bottom:20px;">Last Updated: 22/09/2025 - .xlsx file compression enabled for smaller downloads.</p>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('convertTab')">Convert File</div>
+    <div class="tab" onclick="switchTab('splitTab')">Split File</div>
+  </div>
+
+  <!-- Convert File Tab -->
+  <div id="convertTab" class="tab-content active">
+    <div class="controls">
+      <input type="file" id="datFile" accept=".dat" />
+      <button class="download" onclick="downloadExcel()">⬇️ Download Excel</button>
+      <button class="clear" onclick="clearAll()">🗑️ Clear All</button>
+    </div>
+    <div id="recordCount">No file uploaded.</div>
+    <div class="scroll-table" id="tableContainer">Upload a .dat file to begin.</div>
+  </div>
+
+  <!-- Split File Tab -->
+  <div id="splitTab" class="tab-content">
+    <div class="controls">
+      <input type="number" id="recordsPerFile" placeholder="Records per file" min="1" />
+      <button class="download" onclick="splitFile()">📂 Split & Download</button>
+    </div>
+    <div id="splitInfo">⚠️ Upload a file in the 'Convert File' tab first.</div>
+  </div>
+
+  <!-- Message Box for notifications -->
+  <div id="messageBox"></div>
+
+  <script>
+    let tableData = [];
+    let uploadedFileName = "DAT_Converted.xlsx";
+
+    const preserveSpaceFields = ["F041", "F042", "F083", "F084", "F125", "F126"];
+
+    // Function to show custom notifications
+    function showMessage(message, isError = false) {
+      const messageBox = document.getElementById('messageBox');
+      messageBox.textContent = message;
+      messageBox.style.backgroundColor = isError ? '#ef4444' : '#22c55e'; // Red for error, green for success
+      messageBox.style.display = 'block';
+      setTimeout(() => {
+        messageBox.style.display = 'none';
+      }, 3000);
+    }
+
+    function cleanField(rawChunk, fieldName) {
+      const isBlank = /^[\s.]*$/.test(rawChunk);
+      if (isBlank) return "x";
+      if (preserveSpaceFields.includes(fieldName)) {
+        return rawChunk.replace(/\./g, 'X');
+      }
+      const onlyAlphaAndSpace = /^[A-Za-z\s]+$/.test(rawChunk);
+      if (onlyAlphaAndSpace) {
+        return rawChunk.replace(/\s+/g, '').trim();
+      }
+      return rawChunk.trim();
+    }
+
+    document.getElementById('datFile').addEventListener('change', function (event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      uploadedFileName = file.name.replace(/\.dat$/i, "") + ".xlsx";
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const lines = e.target.result.split(/[\r\n]+/).filter(Boolean);
+        const data = [];
+
+        for (const line of lines) {
+          if (line.length < 687) continue;
+
+          const fnoField = line.slice(40, 50);
+          const record = { FRMID: cleanField(fnoField, "FRMID") };
+
+          const blocks = [
+            { start: 57, end: 137, size: 4, offset: 1 },
+            { start: 137, end: 217, size: 8, offset: 21 },
+            { start: 217, end: 227, size: 1, offset: 31 },
+            { start: 227, end: 267, size: 20, offset: 41 },
+            { start: 267, end: 347, size: 4, offset: 43 },
+            { start: 347, end: 427, size: 8, offset: 63 },
+            { start: 427, end: 437, size: 1, offset: 73 },
+            { start: 437, end: 477, size: 20, offset: 83 }, // fixed
+            { start: 477, end: 557, size: 4, offset: 85 },
+            { start: 557, end: 637, size: 8, offset: 105 },
+            { start: 637, end: 647, size: 1, offset: 115 },
+            { start: 647, end: 687, size: 20, offset: 125 }
+          ];
+
+          blocks.forEach(block => {
+            const seg = line.slice(block.start, block.end);
+            const count = Math.floor((block.end - block.start) / block.size);
+            for (let i = 0; i < count; i++) {
+              const col = `F${String(block.offset + i).padStart(3, '0')}`;
+              const rawChunk = seg.slice(i * block.size, (i + 1) * block.size);
+              record[col] = cleanField(rawChunk, col);
+            }
+          });
+
+          const keyField = line.slice(4, 9);
+          record["KEY"] = cleanField(keyField, "KEY");
+
+          data.push(record);
+        }
+
+        tableData = data;
+        renderTable(data);
+
+        document.getElementById("recordCount").innerText =
+          `✅ Total Records Uploaded: ${data.length}`;
+        document.getElementById("splitInfo").innerText =
+          `You can split ${data.length} records into multiple files.`;
+      };
+      reader.readAsText(file);
+    });
+
+    function renderTable(data) {
+      const container = document.getElementById('tableContainer');
+      if (!data.length) return container.innerHTML = '❌ No data parsed.';
+      const headers = Object.keys(data[0]);
+      let html = '<table><thead><tr>';
+      headers.forEach(h => html += `<th>${h}</th>`);
+      html += '</tr></thead><tbody>';
+      data.forEach(row => {
+        html += '<tr>';
+        headers.forEach(h => html += `<td>${row[h]}</td>`);
+        html += '</tr>';
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function downloadExcel() {
+      if (!tableData.length) return showMessage("⚠️ No data to export.", true);
+      const dataForExcel = tableData.map(row => {
+        let newRow = { ...row };
+        if (!isNaN(row.FRMID)) newRow.FRMID = Number(row.FRMID);
+        return newRow;
+      });
+      const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "DAT_Export");
+      // Reverted to .xlsx with compression for smallest possible .xlsx file
+      XLSX.writeFile(workbook, uploadedFileName, { compression: true });
+    }
+
+    function splitFile() {
+      if (!tableData.length) return showMessage("⚠️ Upload a file first in the 'Convert File' tab.", true);
+      const perFile = parseInt(document.getElementById("recordsPerFile").value);
+      if (!perFile || perFile <= 0) return showMessage("⚠️ Please enter a valid number of records per file.", true);
+
+      let totalFiles = Math.ceil(tableData.length / perFile);
+      for (let i = 0; i < totalFiles; i++) {
+        const start = i * perFile;
+        const end = Math.min((i + 1) * perFile, tableData.length);
+        const chunk = tableData.slice(start, end);
+
+        const dataForExcel = chunk.map(row => {
+          let newRow = { ...row };
+          if (!isNaN(row.FRMID)) newRow.FRMID = Number(row.FRMID);
+          return newRow;
+        });
+
+        const worksheet = XLSX.utils.json_to_sheet(dataForExcel);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "DAT_Export");
+
+        const fileName = `File${i + 1} (${start + 1}-${end}).xlsx`;
+        // Reverted to .xlsx with compression
+        XLSX.writeFile(workbook, fileName, { compression: true });
+      }
+      showMessage(`✅ Successfully split into ${totalFiles} files.`);
+    }
+
+    function clearAll() {
+      document.getElementById('datFile').value = "";
+      document.getElementById('tableContainer').innerHTML = "Upload a .dat file to begin.";
+      document.getElementById("recordCount").innerText = "No file uploaded.";
+      document.getElementById("splitInfo").innerText = "⚠️ Upload a file in the 'Convert File' tab first.";
+      tableData = [];
+      uploadedFileName = "DAT_Converted.xlsx";
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+      document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add("active");
+      document.getElementById(tabId).classList.add("active");
+    }
+  </script>
+</body>
+</html>
+
