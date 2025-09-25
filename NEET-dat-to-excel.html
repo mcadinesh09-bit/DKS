@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEET DAT to Excel Converter</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background: #f0f4f8;
+      color: #333;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    h2 {
+        text-align: center;
+        color: #0056b3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 12px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      text-align: center;
+    }
+    th {
+      background: #007bff;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .btn {
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .btn:hover {
+        background-color: #0056b3;
+    }
+    .btn-clear {
+      background-color: #dc3545;
+    }
+    .btn-clear:hover {
+        background-color: #c82333;
+    }
+    .scroll-container {
+      max-height: 500px;
+      overflow: auto;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+    .btn-container {
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+    input[type="file"] {
+        border: 1px solid #ccc;
+        padding: 8px;
+        border-radius: 5px;
+    }
+    /* Tab Styles */
+    .tabs {
+      overflow: hidden;
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+    .tabs button {
+      background-color: #f1f1f1;
+      float: left;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      transition: 0.3s;
+      font-size: 17px;
+      border-radius: 5px 5px 0 0;
+    }
+    .tabs button:hover {
+      background-color: #ddd;
+    }
+    .tabs button.active {
+      background-color: #007bff;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>NEET DAT File to Excel Converter</h2>
+
+    <!-- Tab links -->
+    <div class="tabs">
+      <button class="tab-link active" onclick="openTab(event, 'NewOMR')">New OMR (SCJ-6879)</button>
+      <button class="tab-link" onclick="openTab(event, 'OldOMR')">Old OMR (SCJ-6630)</button>
+    </div>
+
+    <!-- Tab content for New OMR -->
+    <div id="NewOMR" class="tab-content" style="display: block;">
+      <h3>New OMR Data (SCJ-6879)</h3>
+      <div class="btn-container">
+        <input type="file" id="datFileNew" accept=".dat" />
+        <button class="btn" onclick="downloadExcel('new')">Download Excel</button>
+        <button class="btn btn-clear" onclick="clearAll('new')">Clear All</button>
+      </div>
+      <p><strong>Total Records Imported:</strong> <span id="recordCountNew">0</span></p>
+      <div class="scroll-container">
+        <div id="tableContainerNew"></div>
+      </div>
+    </div>
+
+    <!-- Tab content for Old OMR -->
+    <div id="OldOMR" class="tab-content">
+      <h3>Old OMR Data (SCJ-6630)</h3>
+      <div class="btn-container">
+        <input type="file" id="datFileOld" accept=".dat" />
+        <button class="btn" onclick="downloadExcel('old')">Download Excel</button>
+        <button class="btn btn-clear" onclick="clearAll('old')">Clear All</button>
+      </div>
+      <p><strong>Total Records Imported:</strong> <span id="recordCountOld">0</span></p>
+      <div class="scroll-container">
+        <div id="tableContainerOld"></div>
+      </div>
+    </div>
+</div>
+
+<script>
+  let parsedDataOld = [];
+  let parsedDataNew = [];
+
+  // Function to switch between tabs
+  function openTab(evt, tabName) {
+    let i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tab-content");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tab-link");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+
+  // Core parsing logic for Old OMR
+  function parseTextOld(text) {
+      const lines = text.split(/\r?\n/);
+      const data = [];
+      lines.forEach((line) => {
+          if (line.trim() === "" || line.length < 51) return; // skip empty/short lines
+          const row = {};
+          row['FRMID'] = line.substring(40, 50).trim();
+          row['Key Number'] = String(data.length + 1).padStart(6, '0');
+          // Always process 200 questions
+          for (let i = 0; i < 200; i++) {
+              const qNo = 'F' + String(i + 1).padStart(3, '0');
+              let val = line.charAt(51 + i) ? line.charAt(51 + i).trim() : '';
+              row[qNo] = val === '' ? 'X' : val;
+          }
+          data.push(row);
+      });
+      return data;
+  }
+
+  // Core parsing logic for New OMR
+  function parseTextNew(text) {
+      const lines = text.split(/\r?\n/);
+      const data = [];
+      lines.forEach((line) => {
+          if (line.trim() === "" || line.length < 239) return; // skip empty/short lines for new range
+          const row = {};
+          row['FRMID'] = line.substring(40, 50).trim();
+          row['Key Number'] = String(data.length + 1).padStart(6, '0');
+          // Get Test Booklet Code from 59th character (index 58)
+          row['Test Booklet Code'] = line.charAt(58) ? line.charAt(58).trim() : '';
+          
+          // Always process 200 questions in the table
+          for (let i = 0; i < 200; i++) {
+              const qNo = 'F' + String(i + 1).padStart(3, '0');
+              let val = '';
+              // New OMR reads F001-F180 from char 60 to 239
+              if (i < 180) { 
+                  // 60th character is at index 59.
+                  val = line.charAt(59 + i) ? line.charAt(59 + i).trim() : '';
+              }
+              // F181 to F200 will be 'X' by default
+              row[qNo] = val === '' ? 'X' : val;
+          }
+          data.push(row);
+      });
+      return data;
+  }
+  
+  // Set up file reader for Old OMR
+  document.getElementById('datFileOld').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      parsedDataOld = parseTextOld(e.target.result);
+      showTable('old', 'tableContainerOld', parsedDataOld);
+    };
+    reader.readAsText(file);
+  });
+
+  // Set up file reader for New OMR
+  document.getElementById('datFileNew').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      parsedDataNew = parseTextNew(e.target.result);
+      showTable('new', 'tableContainerNew', parsedDataNew);
+    };
+    reader.readAsText(file);
+  });
+
+  function showTable(type, containerId, data) {
+    const container = document.getElementById(containerId);
+    
+    // Update record count
+    if (type === 'new') {
+        document.getElementById('recordCountNew').textContent = data.length;
+    } else {
+        document.getElementById('recordCountOld').textContent = data.length;
+    }
+
+    if (data.length === 0) {
+      container.innerHTML = '<p style="text-align:center; padding: 20px;">No data to display. Please upload a .dat file.</p>';
+      return;
+    }
+    
+    let html = '<table><thead><tr>';
+    if(type === 'new'){
+        html += '<th>FRMID</th><th>Key Number</th><th>Test Booklet Code</th>';
+    } else {
+        html += '<th>FRMID</th><th>Key Number</th>';
+    }
+
+    for (let i = 1; i <= 200; i++) {
+      html += `<th>F${String(i).padStart(3, '0')}</th>`;
+    }
+    
+    html += '</tr></thead><tbody>';
+
+
+    data.forEach(row => {
+      html += `<tr>`;
+      if(type === 'new'){
+          html += `<td>${row.FRMID}</td><td>${row['Key Number']}</td><td>${row['Test Booklet Code']}</td>`;
+      } else {
+          html += `<td>${row.FRMID}</td><td>${row['Key Number']}</td>`;
+      }
+
+      for (let i = 1; i <= 200; i++) {
+        html += `<td>${row['F' + String(i).padStart(3, '0')]}</td>`;
+      }
+
+      html += `</tr>`;
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  }
+
+  function downloadExcel(type) {
+    const dataToExport = type === 'old' ? parsedDataOld : parsedDataNew;
+    const fileInputId = type === 'old' ? 'datFileOld' : 'datFileNew';
+    
+    if (dataToExport.length === 0) {
+      console.log('No data to export!');
+      return;
+    }
+
+    let headers = [];
+    if (type === 'new') {
+        headers = ['FRMID', 'Key Number', 'Test Booklet Code'];
+    } else {
+        headers = ['FRMID', 'Key Number'];
+    }
+
+    for (let i = 1; i <= 200; i++) {
+      headers.push('F' + String(i).padStart(3, '0'));
+    }
+
+    const dataOrdered = dataToExport.map(row => {
+      const newRow = {};
+      headers.forEach(h => {
+        if (h === 'FRMID' && row[h]) {
+            const num = parseInt(row[h], 10);
+            newRow[h] = isNaN(num) ? row[h] : num;
+        } else {
+            newRow[h] = row[h] || '';
+        }
+      });
+      return newRow;
+    });
+
+    const ws = XLSX.utils.json_to_sheet(dataOrdered, { header: headers });
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'NEET_OMR');
+
+    const fileInput = document.getElementById(fileInputId);
+    let fileName = fileInput.files.length > 0 ? fileInput.files[0].name : 'NEET_OMR_Data.dat';
+    fileName = fileName.replace(/\.[^/.]+$/, ""); // remove extension
+    XLSX.writeFile(wb, fileName + '.xlsx');
+  }
+
+  function clearAll(type) {
+    if (type === 'old') {
+        parsedDataOld = [];
+        document.getElementById('datFileOld').value = '';
+        document.getElementById('tableContainerOld').innerHTML = '';
+        document.getElementById('recordCountOld').textContent = '0';
+    } else {
+        parsedDataNew = [];
+        document.getElementById('datFileNew').value = '';
+        document.getElementById('tableContainerNew').innerHTML = '';
+        document.getElementById('recordCountNew').textContent = '0';
+    }
+  }
+</script>
+
+</body>
+</html>
+
