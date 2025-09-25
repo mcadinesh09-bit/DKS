@@ -34,13 +34,17 @@
           --border-color: #e5e7eb;       /* Standard border color */
       }
 
-      body {
-          font-family: 'Inter', sans-serif;
-          margin: 0;
-          background-color: var(--bg-body);
-          color: var(--text-dark);
-          transition: background-color 0.3s ease;
-      }
+      /* REPLACE WITH THIS CODE */
+/* REPLACE WITH THIS CODE */
+body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", 
+                 Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, 
+                 "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    margin: 0;
+    background-color: #FAFBFF; /* Changed to the new color */
+    color: var(--text-dark);
+    transition: background-color 0.3s ease;
+}
 
       /* Login Page Styles */
       .login-container {
@@ -55,7 +59,7 @@
           max-width: 400px;
           padding: 3rem 2rem;
           background-color: var(--bg-card);
-          border-radius: 12px;
+          border-radius: 8px;
           box-shadow: 0 4px 12px rgba(0,0,0,0.1);
           text-align: center;
       }
@@ -106,19 +110,19 @@
       }
       
       /* Header */
-      .header {
-          width: 100%;
-          background: var(--bg-card);
-          padding: 1rem 2rem;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          box-sizing: border-box;
-          position: sticky;
-          top: 0;
-          z-index: 10;
-      }
+/* REPLACE WITH THIS CODE */
+/* REPLACE WITH THIS CODE */
+.header {
+    width: 100%;
+    /* background, box-shadow, and position properties removed */
+    padding: 3rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+
       .header-main-title {
           display: flex;
           align-items: center;
@@ -132,9 +136,11 @@
       }
 
       /* Main Container */
+      /* REPLACE WITH THIS CODE */
+/* Main Container */
       .container {
-          max-width: 1100px;
-          margin: 2rem auto;
+          max-width: 1800px;
+          margin: 0.5rem auto;
           background: var(--bg-card);
           padding: 2rem;
           border-radius: 12px;
@@ -142,27 +148,51 @@
       }
 
       /* NEW Primary Tabs */
-      .primary-tabs-container {
-          display: flex;
-          gap: 8px;
-          border-bottom: 1px solid var(--border-color);
-          margin-bottom: 2rem;
-      }
-      .primary-tab-button {
-          padding: 12px 20px;
-          font-size: 16px;
-          font-weight: 600;
-          border: none;
-          background: transparent;
-          color: var(--text-light);
-          cursor: pointer;
-          border-bottom: 3px solid transparent;
-          transition: color 0.2s, border-bottom 0.2s;
-      }
-      .primary-tab-button.active {
-          color: var(--primary-color);
-          border-bottom: 3px solid var(--primary-color);
-      }
+      /* REPLACE WITH THIS CODE */
+/* REPLACE WITH THIS CODE */
+/* You will find this block */
+.primary-tabs-container {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 0.0rem;
+}
+
+
+.tabs-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f1f5f9; /* Changed to light gray */
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+}
+
+
+      /* REPLACE WITH THIS CODE */
+.primary-tab-button {
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    background: transparent;
+    color: var(--text-light);
+    cursor: pointer;
+    border-radius: 50px; /* Makes the button shape rounded */
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.primary-tab-button:hover:not(.active) {
+    background-color: var(--bg-header); /* Adds a subtle hover effect to inactive tabs */
+    color: var(--primary-color);
+}
+
+.primary-tab-button.active {
+    color: #FFFFFF; /* White text for active tab */
+    background-color: var(--primary-color); /* Dark blue background for active tab */
+    box-shadow: 0 2px 8px rgba(0, 51, 102, 0.2);
+}
       
       /* Form Grid & Inputs */
       .form-grid {
@@ -207,8 +237,11 @@
           color: var(--text-light);
           width: 100%;
       }
+      input[type="date"].has-value::before, input[type="date"]:focus::before {
+           content: '';
+      }
       input[type="date"]:valid::before {
-          content: '';
+           content: '';
       }
 
       /* File Upload Blocks */
@@ -218,20 +251,22 @@
           margin-bottom: 1.5rem;
           font-weight: 700;
       }
-      .upload-block {
-          background: #f8fafc;
-          border: 1px solid var(--border-color);
-          padding: 1.25rem;
-          margin-bottom: 1rem;
-          border-radius: 12px;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          flex-wrap: wrap;
-          gap: 1rem;
-          transition: border-color 0.3s, background-color 0.3s;
-      }
-      .upload-block.uploaded-file {
+
+.upload-block {
+    background: #f1f5f9; /* Changed to light gray */
+    border: none;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+
+ .upload-block.uploaded-file {
           border-color: var(--success-color);
           background-color: #f0fdf4;
       }
@@ -249,10 +284,13 @@
           display: block;
           margin-top: 4px;
       }
-      .description-highlight {
-          color: var(--accent-color);
-          font-weight: 500;
-      }
+     
+/* REPLACE WITH THIS CODE */
+.description-highlight {
+    color: #f5365c; /* Changed to yellow */
+    font-weight: 500;
+    font-size: 14px;
+}
       .upload-block input[type="file"] { display: none; }
       .file-upload-btn {
           background: var(--primary-color);
@@ -335,25 +373,34 @@
           box-shadow: 0 2px 8px rgba(0,0,0,0.06);
           border: 1px solid var(--border-color);
       }
-      .results-table th, .summary-table th {
-          background-color: var(--bg-header);
-          color: var(--text-primary);
-          font-weight: 700;
-          text-transform: uppercase;
-          font-size: 12px;
-          padding: 12px 15px;
-          text-align: center; /* Centered headers */
-          position: sticky;
-          top: 0;
-          z-index: 1;
-      }
-      .results-table td, .summary-table td {
-          padding: 12px 15px;
-          border-bottom: 1px solid var(--border-color);
-          font-size: 14px;
-          text-align: center; /* Centered cell data */
-      }
-      .results-table tr:last-child td, .summary-table tr:last-child td {
+      /* REPLACE WITH THIS CODE */
+.results-table th, .summary-table th {
+    background-color: #f8f9fa; /* Light gray background */
+    color: var(--text-primary); /* Dark blue text */
+    font-weight: 600; /* Slightly adjusted font-weight */
+    text-transform: uppercase;
+    font-size: 11px; /* Slightly smaller font size */
+    padding: 12px 15px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    border: 1px solid #e5e7eb; /* Adds all grid lines */
+}
+      /* REPLACE WITH THIS CODE */
+/* REPLACE WITH THIS CODE */
+.results-table td, .summary-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color); /* Adds vertical lines */
+    font-size: 14px;
+    text-align: center;
+    background-color: var(--bg-card); 
+}
+/* Add a rule for the first cell in each row to have a left border */
+.results-table td:first-child, .summary-table td:first-child {
+    border-left: 1px solid var(--border-color);
+}      .results-table tr:last-child td, .summary-table tr:last-child td {
           border-bottom: none;
       }
       .results-table tr:nth-child(even), .summary-table tr:nth-child(even) {
@@ -390,9 +437,10 @@
       .results-table th.sticky-col, .summary-table th.sticky-col {
           background-color: var(--bg-header);
       }
-      .results-table tr:nth-child(even) td.sticky-col, .summary-table tr:nth-child(even) td.sticky-col {
-          background-color: var(--bg-row-alt);
-      }
+      /* REPLACE WITH THIS CODE */
+.results-table tr:nth-child(even) td.sticky-col, .summary-table tr:nth-child(even) td.sticky-col {
+    background-color: var(--bg-card); /* Changed to white */
+}
 
       /* Pagination */
       .pagination-controls {
@@ -493,17 +541,21 @@
           flex-wrap: wrap;
           margin-bottom: 10px; /* Added margin to keep buttons from touching other elements */
       }
-      .btn-download {
-          background-color: var(--secondary-color); color: white;
-          font-weight: 600; padding: 10px 20px; border: none;
-          border-radius: 8px; cursor: pointer;
-          transition: background-color 0.2s, transform 0.2s;
-          position: relative;
-      }
-      .btn-download:hover {
-          background-color: var(--primary-color);
-          transform: translateY(-2px);
-      }
+      /* REPLACE WITH THIS CODE */
+/* REPLACE WITH THIS CODE */
+.btn-download {
+    background-color: #233A6C; /* Default color: Dark Blue */
+    color: #FFFFFF; /* Default text color: White */
+    font-weight: 600; padding: 10px 20px; border: none;
+    border-radius: 8px; cursor: pointer;
+    transition: background-color 0.2s, transform 0.2s, color 0.2s;
+    position: relative;
+}
+.btn-download:hover {
+    background-color: #fbbc04; /* Hover color: Yellow */
+    color: #000000; /* Hover text color: Black for readability */
+    transform: translateY(-2px);
+}
       .dropdown-menu {
           position: absolute; top: 100%; left: 0; background-color: white;
           border: 1px solid var(--border-color); border-radius: 8px;
@@ -528,7 +580,7 @@
       .modal-content {
           background-color: white;
           padding: 20px;
-          border-radius: 12px;
+          border-radius: 8px;
           box-shadow: 0 5px 15px rgba(0,0,0,0.3);
           width: 90%;
           max-width: 400px; /* Reduced size */
@@ -587,21 +639,21 @@
       .pdf-header h1 { font-size: 20px; font-weight: 800; margin-bottom: 5px; color: #000; }
       .pdf-header p { font-size: 10px; color: #000; }
       .pdf-header .test-info-line { font-size: 14px; font-weight: 600; margin-top: 10px; color: #000; }
-      .student-info { margin-bottom: 15px; border: 1px solid #000; padding: 10px; border-radius: 5px; }
+      .student-info { margin-bottom: 15px; border: 1px solid #000; padding: 10px; border-radius: 8px; }
       .student-info p { margin: 0 0 5px 0; color: #000; font-weight: 600; }
       .student-info strong { color: #000; font-weight: 700; }
       .subjects-container { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
-      .pdf-subject-column { flex: 1; border: 1px solid #000; padding: 8px; border-radius: 5px; }
+      .pdf-subject-column { flex: 1; border: 1px solid #000; padding: 8px; border-radius: 8px; }
       .pdf-subject-column h3 { font-size: 14px; font-weight: 700; margin: 0 0 10px 0; color: #000; text-align: center; }
       .pdf-response-table { width: 100%; border-collapse: collapse; }
       .pdf-response-table td { padding: 4px; font-size: 10px; border: 0.5px solid #000; text-align: center; font-weight: 600; }
       /* MODIFICATION: Made subject table headers black with white text */
-      .pdf-response-table th { background-color: #000000; color: #FFFFFF; font-weight: 700; padding: 4px; font-size: 10px; border: 0.5px solid #000; text-align: center; }
+      .pdf-response-table th { background-color: #333333; color: #FFFFFF; font-weight: 700; padding: 4px; font-size: 10px; border: 0.5px solid #000; text-align: center; }
       .grid-table { width: 100%; margin: 0 auto; border-collapse: collapse; table-layout: fixed; }
       .grid-table th, .grid-table td { border: 1px solid #000; width: 16px; height: 16px; text-align: center; vertical-align: middle; font-size: 9px; font-weight: bold; color: #000; padding: 0; }
       .grid-table th { background-color: #e0e0e0; }
-      .grid-table td.correct { background-color: #fff; color: #000; }
-      .grid-table td.wrong { background-color: #fff; color: #000; }
+      .grid-table td.correct { background-color: #dcfce7; color: #15803d; }
+      .grid-table td.wrong { background-color: #fee2e2; color: #b91c1c; }
 
       /* Merged Test specific styles */
       .merger-tab-content .button-container {
@@ -648,10 +700,10 @@
       .stats-container {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-          gap: 1.5rem;
-          margin-bottom: 2rem;
+          gap: 1rem;
+          margin-bottom: 1rem;
           padding: 1.5rem;
-          background-color: #f8fafc;
+          background-color: #FFFFFF;
           border: 1px solid var(--border-color);
           border-radius: 12px;
       }
@@ -682,7 +734,7 @@
         <!-- New Header -->
         <div class="header">
             <div class="header-main-title">
-                <span>ALLEN | Result Generator</span>
+                <span>Test Manager | RACE</span>
             </div>
         </div>
 
@@ -708,16 +760,17 @@
         
         <!-- Main Content Area -->
         <div class="container">
-            <div class="primary-tabs-container">
-                <!-- Consolidated 'OBJECTIVE' tab -->
-                <button id="objectiveTabBtn" class="primary-tab-button active">Objective Test</button>
-                <button id="subjectiveTabBtn" class="primary-tab-button">Subjective Test</button>
-                <button id="mergerTabBtn" class="primary-tab-button">Merged Multiple</button>
-            </div>
+            <div class="tabs-wrapper">
+    <div class="primary-tabs-container">
+        <button id="objectiveTabBtn" class="primary-tab-button active">Objective Test</button>
+        <button id="subjectiveTabBtn" class="primary-tab-button">Subjective Test</button>
+        <button id="mergerTabBtn" class="primary-tab-button">Merged Multiple</button>
+    </div>
+</div>
 
             <!-- Tab 1: Objective & Subjective Result Generator -->
             <div id="objectiveSubjectiveApp" class="tab-content-section" style="display: block;">
-                <div class="form-grid">
+                <div class="form-grid" style="background: var(--bg-card); padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 0.25px solid ;border-color:#78909c;">
                     <div>
                         <label for="testName">Test Name *</label>
                         <input type="text" id="testName" placeholder="Enter Test Name" style="width: 100%;" />
@@ -730,15 +783,15 @@
                 
                 <!-- Objective Test Section -->
                 <div id="objectiveUploadSection" class="file-upload-section" style="display: block;">
-                    <h3>Upload Files (Objective)</h3>
-                    <h5>Supported Question Type : SC,CS,MP,ML,CM,MC,ID,IM,IS,MM</h5>
+                    <h3>Upload Files (Objective) </h3>
+                    <h6>Supported Question Type : SC,CS,MP,ML,CM,MC,ID,IM,IS,MM</h6>
 
                     <div class="upload-block">
                         <div class="upload-block-left">
                             <div class="upload-block-text">
                                 Upload Marking Scheme
                                 <button id="downloadTemplateBtn" class="info-btn" title="Download Template">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#233A6C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                                 </button>
                             </div>
                             <span class="description description-highlight">Columns: Section | Que.No.| Subject | Ques Type | Correct Answer | Right Marks | Negative Marks | Bonus</span>
@@ -872,7 +925,7 @@
                     </div>
                     <!-- Tab 1: Objective + Subjective Merger -->
                     <div id="objSubjMerger" class="merger-tab-content active">
-                        <div class="form-grid" style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                       <div class="form-grid" style="background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid ;border-color:#78909c;">
                             <div>
                                 <label for="testNameInput1">Test Name (Optional)</label>
                                 <input type="text" id="testNameInput1" placeholder="e.g., Test-1 JEE(M+A)" style="width: 100%;">
@@ -927,7 +980,7 @@
                     </div>
                     <!-- Tab 2: Objective + Objective Merger -->
                     <div id="objObjMerger" class="merger-tab-content" style="display: none;">
-                        <div class="form-grid" style="background: #f8fafc; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                        <div class="form-grid" style="background: var(--bg-card); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color);">
                             <div>
                                 <label for="testNameInput2">Test Name (Optional)</label>
                                 <input type="text" id="testNameInput2" placeholder="e.g., Test-1 JEE(M+A)" style="width: 100%;">
@@ -990,7 +1043,8 @@
             
         </div>
     </div>
-    <script>
+
+<script>
     document.addEventListener('DOMContentLoaded', () => {
         const { jsPDF } = window.jspdf;
 
@@ -2054,11 +2108,12 @@
 
             const headerGroups = [
                 { name: 'Student Info', span: 4 },
+                { name: 'Attempted', span: 3 },
                 { name: 'Subject Scores', span: orderedSubjects.length },
                 { name: 'Overall Score & Rank', span: overallColSpan }
             ].filter(g => g.span > 0);
 
-            const subHeaders = ['Sno.', 'Fno.', 'Student Name', 'Batch', ...orderedSubjects.map(s => `${SUBJECT_SHORT_NAMES[s] || s} (${formatNumberToTwoDecimals(maxMarksBySubject[s] || 0)})`)];
+            const subHeaders = ['Sno.', 'Fno.', 'Student Name', 'Batch', 'Correct', 'Wrong', 'Left', ...orderedSubjects.map(s => `${SUBJECT_SHORT_NAMES[s] || s} (${formatNumberToTwoDecimals(maxMarksBySubject[s] || 0)})`)];
             if (uniqueSubjects.length > 1) subHeaders.push(`Total (${formatNumberToTwoDecimals(overallMaxMarks)})`);
             subHeaders.push('%age', '%tile', 'Rank');
 
@@ -2073,9 +2128,12 @@
 
             renderTableWithPagination('summaryTable', 'summaryPagination', summaryResults, 10, (row) => {
                 let html = `<td class="sticky-col">${row['Sno.']}</td>
-                                <td>${row['Fno.']}</td>
-                                <td style="text-align: left;">${row['Student Name']}</td>
-                                <td>${row['Batch']}</td>`;
+                                        <td>${row['Fno.']}</td>
+                                        <td style="text-align: left;">${row['Student Name']}</td>
+                                        <td>${row['Batch']}</td>
+                                        <td class="correct-count-cell">${row.correct_count}</td>
+                                        <td class="incorrect-count-cell">${row.incorrect_count}</td>
+                                        <td class="left-count-cell">${row.left_count}</td>`;
                 orderedSubjects.forEach(sub => {
                     html += `<td>${formatNumberToTwoDecimals(row[`marks_${sub.toLowerCase()}`])}</td>`;
                 });
@@ -2085,8 +2143,8 @@
                 }
                 
                 html += `<td>${row.percentage.toFixed(2)}</td>
-                                <td>${row.percentile}</td>
-                                <td>${row.rank}</td>`;
+                                        <td>${row.percentile}</td>
+                                        <td>${row.rank}</td>`;
                 return html;
             }, () => subHeaders, headerGroups);
             
@@ -2189,15 +2247,15 @@
 
             renderTableWithPagination('summaryTable', 'summaryPagination', calculatedResults, 10, (row, index) => {
                                         let html = `<td class="sticky-col">${index + 1}</td>
-                                                        <td>${row.frmid}</td>
-                                                        <td style="text-align: left;">${row.studentName}</td>
-                                                        <td>${row.batch}</td>`;
+                                                                    <td>${row.frmid}</td>
+                                                                    <td style="text-align: left;">${row.studentName}</td>
+                                                                    <td>${row.batch}</td>`;
                                         uniqueSubjects.forEach(sub => {
                                             html += `<td>${formatNumberToTwoDecimals(row.marks_by_subject[sub])}</td>`;
                                         });
                                         html += `<td>${formatNumberToTwoDecimals(row.total_marks)}</td>
-                                                         <td>${row.percentage.toFixed(2)}</td>
-                                                         <td>${row.rank}</td>`;
+                                                                         <td>${row.percentage.toFixed(2)}</td>
+                                                                         <td>${row.rank}</td>`;
                                         return html;
             }, () => headers[0]);
 
@@ -2212,13 +2270,14 @@
             document.getElementById('summaryResults').classList.add('active');
         }
         
-        function generateGrid(blocks, status) {
+        function generateGrid(blocks, status, isPdf = false) {
             const headers = ['P', 'Q', 'R', 'S', 'T'];
             let html = '<table class="grid-table">';
             html += '<tr><th></th>' + headers.map(h => `<th>${h}</th>`).join('') + '</tr>';
             ['A','B','C','D'].forEach((rowLabel, i) => {
                 const values = (blocks[i] || '').padEnd(5, ' ').split('');
-                html += `<tr><th>${rowLabel}</th>` + values.map((v) => `<td class="${status[i]}">${v.trim()}</td>`).join('') + '</tr>';
+                const cellClass = isPdf ? '' : status[i];
+                html += `<tr><th>${rowLabel}</th>` + values.map((v) => `<td class="${cellClass}">${v.trim()}</td>`).join('') + '</tr>';
             });
             html += '</table>';
             return html;
@@ -2251,9 +2310,9 @@
                 const questionTypeTotalHeaders = uniqueQuestionTypes.sort();
 
                 let rowHtml = `<td class="sticky-col">${rowData.frmid}</td>
-                                                <td>${rowData.correct_count}</td>
-                                                <td>${rowData.incorrect_count}</td>
-                                                <td>${rowData.left_count}</td>`;
+                                                                    <td>${rowData.correct_count}</td>
+                                                                    <td>${rowData.incorrect_count}</td>
+                                                                    <td>${rowData.left_count}</td>`;
                 
                 questionTypeTotalHeaders.forEach(type => {
                     const typeKey = `${type.toLowerCase()}_total`;
@@ -2344,7 +2403,7 @@
                         } else {
                             mmResult = compareMMAnswersDat(questionInfo.correctAnswer, student[qKey]);
                         }
-                        cellContent = generateGrid(mmResult.studentBlocks, mmResult.rowStatus);
+                        cellContent = generateGrid(mmResult.studentBlocks, mmResult.rowStatus, false); // isPdf is false for web view
                     }
                     
                     if (studentResult) {
@@ -2372,7 +2431,7 @@
                     const originalQNo = questionInfo.relativeQNoInSubject ? questionInfo.relativeQNoInSubject : parseInt(qKey.slice(1));
                     let headerText = `Q${originalQNo} (${subject} - ${type})`;
                     if (type.toLowerCase() === 'mm') {
-                        headerText += `<br/>Correct:<br/>${generateGrid(compareMMAnswersDat(questionInfo.correctAnswer, '').correctBlocks, Array(4).fill("correct"))}`;
+                        headerText += `<br/>Correct:<br/>${generateGrid(compareMMAnswersDat(questionInfo.correctAnswer, '').correctBlocks, Array(4).fill("correct"), false)}`; // isPdf is false for web view
                     } else {
                         headerText += ` [${questionInfo.correctAnswer}]`;
                     }
@@ -2515,49 +2574,62 @@
 
         /** PDF and Excel Generation **/
 
+        function downloadDataAsExcel(data, fileName, formatRowCallback) {
+            if (!data || data.length === 0) {
+                showModal('Error', 'No data available to download.', 'error');
+                return;
+            }
+            try {
+                const formattedData = data.map(formatRowCallback);
+                const worksheet = XLSX.utils.json_to_sheet(formattedData);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+                XLSX.writeFile(workbook, `${getFormattedTestFileName()}_${fileName}`);
+                showModal('Success', 'Excel file has been downloaded.', 'success', 3000);
+            } catch (error) {
+                showModal('Error', `Failed to generate Excel file: ${error.message}`, 'error');
+            }
+        }
+
         function getFormattedTestFileName() {
             const testName = testNameInput.value.trim().replace(/[^a-zA-Z0-9]/g, '_');
             const testDate = testDateInput.value;
             return `${testName}_${testDate}`;
         }
 
-        // --- NEW REUSABLE FUNCTION FOR STYLED EXCEL ---
         function exportStyledExcel(fileName, sheetName, title, subtitle, headers, dataRows, headerGroups = []) {
-            // --- Style Definitions ---
             const titleStyle = { font: { name: 'Calibri', sz: 18, bold: true, color: { rgb: "FFFFFFFF" } }, fill: { fgColor: { rgb: "FF003366" } }, alignment: { horizontal: "center", vertical: "center" } };
             const subtitleStyle = { font: { name: 'Calibri', sz: 14, bold: true, color: { rgb: "FFFFFFFF" } }, fill: { fgColor: { rgb: "FF003366" } }, alignment: { horizontal: "center", vertical: "center" } };
-            const groupHeaderStyle = { font: { sz: 12, bold: true, color: { rgb: "FF000000" } }, fill: { fgColor: { rgb: "FFD9E1F2" } }, alignment: { horizontal: "center" }, border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } } };
-            const subHeaderStyle = { font: { bold: true, color: { rgb: "FF000000" } }, fill: { fgColor: { rgb: "FFD9E1F2" } }, alignment: { horizontal: "center", vertical: "center" }, border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } } };
+            const groupHeaderStyle = { font: { sz: 12, bold: true, color: { rgb: "FFFFFFFF" } }, fill: { fgColor: { rgb: "FF003366" } }, alignment: { horizontal: "center" }, border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } } };
+            const subHeaderStyle = { font: { bold: true, color: { rgb: "FFFFFFFF" } }, fill: { fgColor: { rgb: "FF003366" } }, alignment: { horizontal: "center", vertical: "center" }, border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } } };
             const cellStyle = { border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } } };
 
-            // --- Data Preparation ---
-            const worksheetData = [
-                [title],
-                [subtitle]
-            ];
-            // Add group headers if they exist
+            const worksheetData = [ [title], [subtitle] ];
             if (headerGroups.length > 0) {
-                 worksheetData.push(headerGroups.map(h => h.name));
+                const groupNames = [];
+                headerGroups.forEach(g => {
+                    groupNames.push(g.name);
+                    for(let i = 1; i < g.span; i++) groupNames.push("");
+                });
+                 worksheetData.push(groupNames);
             }
             worksheetData.push(headers);
             dataRows.forEach(row => worksheetData.push(row));
 
             const ws = XLSX.utils.aoa_to_sheet(worksheetData);
             
-            // --- Auto-fit Columns ---
-            const colWidths = headers.map(header => ({ wch: String(header).length }));
+            const colWidths = headers.map((_, i) => ({ wch: 0 }));
             worksheetData.forEach(row => {
                 row.forEach((cell, i) => {
                     const len = cell ? String(cell).length : 0;
-                    if (!colWidths[i] || colWidths[i].wch < len) {
-                        colWidths[i] = { wch: len };
+                    if (colWidths[i].wch < len) {
+                        colWidths[i].wch = len;
                     }
                 });
             });
-            colWidths.forEach(col => { col.wch = Math.max(10, col.wch + 2); }); // Minimum width 10, plus padding
+            colWidths.forEach(col => { col.wch = Math.max(10, col.wch + 2); });
             ws['!cols'] = colWidths;
             
-            // --- Handle Merges and Styles ---
             const headerRowCount = (headerGroups.length > 0) ? 3 : 2;
             const totalCols = headers.length;
 
@@ -2595,11 +2667,10 @@
             XLSX.writeFile(wb, fileName);
         }
 
-        // --- MODIFIED EXCEL DOWNLOAD FUNCTION FOR MAIN TAB ---
         function downloadObjectiveResults(includeRank, type) {
             if (type === 'pdf') {
                 const dataToExportForPdf = summaryResults.map(row => {
-                    const exportRow = [row['Sno.'], row['Fno.'], row['Student Name'], row['Batch']];
+                    const exportRow = [row['Sno.'], row['Fno.'], row['Student Name'], row['Batch'], row.correct_count, row.incorrect_count, row.left_count];
                     uniqueSubjects.forEach(sub => exportRow.push(formatNumberToTwoDecimals(row[`marks_${sub.toLowerCase()}`])));
                     if (uniqueSubjects.length > 1) exportRow.push(formatNumberToTwoDecimals(row.total_marks));
                     exportRow.push(row.percentage.toFixed(2), row.percentile);
@@ -2610,14 +2681,15 @@
                 return;
             }
 
-            // --- New Excel Generation Logic ---
             const testName = testNameInput.value.trim();
             const testDate = testDateInput.value ? formatDateToDdMmmYyyy(testDateInput.value) : '';
             const title = "Test Results";
             const subtitle = `${testName} | ${testDate}`;
 
-            const headers = ['Sno.', 'Fno.', 'Student Name', 'Batch'];
-            uniqueSubjects.forEach(s => headers.push(`${SUBJECT_SHORT_NAMES[s] || s} (${formatNumberToTwoDecimals(maxMarksBySubject[s] || 0)})`));
+            const orderedSubjects = [...uniqueSubjects].sort((a,b) => (PREDEFINED_SUBJECT_ORDER.indexOf(a) || 99) - (PREDEFINED_SUBJECT_ORDER.indexOf(b) || 99));
+            
+            const headers = ['Sno.', 'Fno.', 'Student Name', 'Batch', 'Correct', 'Wrong', 'Left', ...orderedSubjects.map(s => `${SUBJECT_SHORT_NAMES[s] || s} (${formatNumberToTwoDecimals(maxMarksBySubject[s] || 0)})`)];
+            
             if (uniqueSubjects.length > 1) {
                 headers.push(`Total (${formatNumberToTwoDecimals(overallMaxMarks)})`);
             }
@@ -2625,16 +2697,27 @@
             if (includeRank) {
                 headers.push('Rank');
             }
+            
+            let overallColSpan = 2; // for %age and %tile
+            if (uniqueSubjects.length > 1) overallColSpan++; // for Total
+            if (includeRank) overallColSpan++;
+
+            const headerGroups = [
+                { name: 'Student Info', span: 4 },
+                { name: 'Attempted', span: 3 },
+                { name: 'Subject Scores', span: orderedSubjects.length },
+                { name: 'Overall Score & Rank', span: overallColSpan }
+            ].filter(g => g.span > 0);
 
             const dataRows = summaryResults.map(row => {
-                const dataRow = [row['Sno.'], row['Fno.'], row['Student Name'], row['Batch']];
-                uniqueSubjects.forEach(sub => {
+                const dataRow = [row['Sno.'], row['Fno.'], row['Student Name'], row['Batch'], row.correct_count, row.incorrect_count, row.left_count];
+                orderedSubjects.forEach(sub => {
                     dataRow.push(parseFloat(formatNumberToTwoDecimals(row[`marks_${sub.toLowerCase()}`])));
                 });
                 if (uniqueSubjects.length > 1) {
                     dataRow.push(parseFloat(formatNumberToTwoDecimals(row.total_marks)));
                 }
-                dataRow.push(parseFloat(row.percentage.toFixed(2)));
+                dataRow.push(parseFloat(row.percentage));
                 dataRow.push(parseFloat(row.percentile));
                 if (includeRank) {
                     dataRow.push(row.rank);
@@ -2645,7 +2728,7 @@
             const baseFileName = getFormattedTestFileName();
             const finalFileName = `${baseFileName}_Summary_Results_${includeRank ? 'WithRank' : 'WithoutRank'}.xlsx`;
             
-            exportStyledExcel(finalFileName, 'Summary Results', title, subtitle, headers, dataRows);
+            exportStyledExcel(finalFileName, 'Summary Results', title, subtitle, headers, dataRows, headerGroups);
         }
 
         async function generateObjectiveSummaryPdf(data, includeRank) {
@@ -2670,14 +2753,16 @@
 
             const mainHeaders = [
                 { content: 'Student Info', colSpan: 4, styles: { halign: 'center' } },
+                { content: 'Attempted', colSpan: 3, styles: { halign: 'center' } },
                 { content: 'Subject', colSpan: orderedSubjects.length, styles: { halign: 'center' } },
                 { content: 'Overall Score & Rank', colSpan: overallColSpan, styles: { halign: 'center' } }
             ];
             
-            const subHeaders = ['Sno.', 'Fno.', 'Student Name', 'Batch', ...orderedSubjects.map(s => `${SUBJECT_SHORT_NAMES[s] || s}`)];
-            if (showTotalColumn) subHeaders.push('Total');
-            subHeaders.push('%age', '%tile');
-            if (includeRank) subHeaders.push('Rank');
+            // REPLACE WITH THIS CODE
+            const subHeaders = ['Sno.', 'Fno.', 'Student Name', 'Batch', 'Correct', 'Wrong', 'Left', ...orderedSubjects.map(s => `${SUBJECT_SHORT_NAMES[s] || s} (${formatNumberToTwoDecimals(maxMarksBySubject[s])})`)];
+            if (showTotalColumn) subHeaders.push(`Total (${formatNumberToTwoDecimals(overallMaxMarks)})`);
+            subHeaders.push('%age', '%tile');
+            if (includeRank) subHeaders.push('Rank');
 
             const head = [mainHeaders, subHeaders];
             const bodyData = data;
@@ -2691,7 +2776,19 @@
                     theme: 'grid',
                     headStyles: { fillColor: [217, 217, 217], textColor: [0, 0, 0], fontStyle: 'bold', fontSize: 8, halign: 'center' },
                     styles: { fontSize: 8, halign: 'center', textColor: [0, 0, 0], lineColor: [0, 0, 0], lineWidth: 0.1 },
-                    columnStyles: { 2: { halign: 'left' } }
+                    columnStyles: { 2: { halign: 'left' } },
+                    didDrawCell: function(data) {
+                        if (data.section === 'body') {
+                            if (data.column.index === 4) { // Correct
+                                doc.setTextColor(16, 163, 74); // success-color
+                            } else if (data.column.index === 5) { // Wrong
+                                doc.setTextColor(220, 38, 38); // error-color
+                            }
+                        }
+                    },
+                    willDrawPage: function(data) {
+                        doc.setTextColor(0, 0, 0); // Reset color for headers, footers etc.
+                    }
                 });
 
                 doc.save(`${getFormattedTestFileName()}_Summary_Report_${includeRank ? 'WithRank' : 'WithoutRank'}.pdf`);
@@ -2705,7 +2802,6 @@
             }
         }
         
-        // --- MODIFIED FUNCTION FOR B&W PDF, SINGLE PAGE FIT, COLUMN SPLITTING & FILE SIZE REDUCTION ---
         async function generateStudentPdfs() {
             if (studentData.length === 0) {
                 showModal('Error', 'No student response data available to generate individual PDFs.', 'error');
@@ -2717,9 +2813,12 @@
             toggleSpinner(true);
 
             const pdf = new jsPDF('p', 'mm', 'a4');
+
             const testName = testNameInput.value.trim();
             const testDate = testDateInput.value ? formatDateToDdMmmYyyy(testDateInput.value) : '';
-            const isCompactView = questionColumns.length > 70;
+
+            const subjectCount = uniqueSubjects.length;
+            const useCompactColumns = subjectCount > 3 || questionColumns.length > 70;
 
             for (let i = 0; i < totalStudents; i++) {
                 showModal('Info', `Generating PDF ${i + 1} of ${totalStudents}... Please wait.`, 'info', 0);
@@ -2734,43 +2833,61 @@
                 pdfContentDiv.className = 'pdf-content';
                 pdfContentDiv.style.position = 'absolute';
                 pdfContentDiv.style.left = '-9999px';
+                pdfContentDiv.style.width = '210mm';
                 document.body.appendChild(pdfContentDiv);
 
-                let marksHtml = '';
-                if(studentResult) {
-                     marksHtml = `
-                        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                            <div style="width: 65px; height: 65px; border-radius: 50%; border: 2px solid #000; display: flex; flex-direction: column; justify-content: center; align-items: center; margin-bottom: 8px;">
-                                <span style="font-weight: 800; font-size: 18px; color: #000;">${formatNumberToTwoDecimals(studentResult.total)}</span>
-                                <span style="font-size: 9px; text-transform: uppercase; color: #000; font-weight: 600;">Marks</span>
-                            </div>
-                            <div style="font-size: 10px; font-weight: 600; color: #000; white-space: nowrap;">
-                                <span>Correct: ${studentResult.correct_count}</span>
-                                <span style="margin: 0 5px;">|</span>
-                                <span>Incorrect: ${studentResult.incorrect_count}</span>
-                                <span style="margin: 0 5px;">|</span>
-                                <span>Left: ${studentResult.left_count}</span>
-                            </div>
-                        </div>
-                    `;
-                }
-
-                let contentHTML = `
-                    <div class="pdf-header">
-                        <h1>Response Sheet</h1>
-                        <p class="test-info-line">${testName} | ${testDate}</p>
-                    </div>
-                    <div class="student-info" style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <p><strong>F. No.:</strong> ${student.frmid}</p>
-                            <p><strong>Student Name:</strong> ${studentName}</p>
-                            <p><strong>Batch:</strong> ${batch}</p>
-                        </div>
-                        ${marksHtml}
-                    </div>
-                    <div class="subjects-container">
-                `;
                 
+// REPLACE WITH THIS CODE
+// REPLACE WITH THIS NEW SECTION
+let studentInfoHtml = '';
+if (studentResult) {
+    studentInfoHtml = `
+        <div class="student-info" style="display: flex; justify-content: space-between; align-items: stretch; padding: 10px 5px;">
+            <div style="flex-basis: 55%; padding-right: 10px; display: flex; flex-direction: column; justify-content: center;">
+                <p style="font-size: 13px; margin: 3px 0; font-weight: 600;"><strong>F. No.:</strong> ${student.frmid}</p>
+                <p style="font-size: 13px; margin: 3px 0; font-weight: 600;"><strong>Student Name:</strong> ${studentName}</p>
+                <p style="font-size: 13px; margin: 3px 0; font-weight: 600;"><strong>Batch:</strong> ${batch}</p>
+            </div>
+
+            <div style="border-left: 1px solid #ccc;"></div>
+
+            <div style="flex-basis: 45%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding-left: 10px;">
+                <div style="text-align: center; margin-bottom: 8px;">
+                    <span style="font-weight: 800; font-size: 32px; color: #000; display: block; line-height: 1;">${formatNumberToTwoDecimals(studentResult.total)}</span>
+                    <span style="font-size: 9px; text-transform: uppercase; color: #555; font-weight: 600; display: block; letter-spacing: 0.5px;">Your Score</span>
+                </div>
+                <div style="font-size: 11px; font-weight: 600; color: #333; white-space: nowrap;">
+                    <span>Correct: <strong style="color: #16a34a;">${studentResult.correct_count}</strong></span>
+                    <span style="margin: 0 8px;">|</span>
+                    <span>Incorrect: <strong style="color: #dc2626;">${studentResult.incorrect_count}</strong></span>
+                    <span style="margin: 0 8px;">|</span>
+                    <span>Left: <strong>${studentResult.left_count}</strong></span>
+                </div>
+            </div>
+        </div>
+    `;
+} else {
+    // Fallback for cases where there are no results (optional)
+    studentInfoHtml = `
+        <div class="student-info">
+             <p><strong>F. No.:</strong> ${student.frmid}</p>
+             <p><strong>Student Name:</strong> ${studentName}</p>
+             <p><strong>Batch:</strong> ${batch}</p>
+        </div>
+    `;
+}
+
+
+let contentHTML = `
+    <div class="pdf-header">
+        <h1>Response Sheet</h1>
+        <p class="test-info-line">${testName} | ${testDate}</p>
+    </div>
+    ${studentInfoHtml}
+    <div class="subjects-container">
+`;                
+
+
                 const questionsBySubject = {};
                 uniqueSubjects.forEach(sub => questionsBySubject[sub] = []);
                 
@@ -2791,11 +2908,16 @@
                     }
                 });
                 
-                const orderedSubjects = [...uniqueSubjects].sort((a, b) => {
-                    const indexA = PREDEFINED_SUBJECT_ORDER.indexOf(a.toUpperCase());
-                    const indexB = PREDEFINED_SUBJECT_ORDER.indexOf(b.toUpperCase());
-                    return (indexA === -1 ? 99 : indexA) - (indexB === -1 ? 99 : indexB);
-                });
+                const minQuestionPerSubject = {};
+                for (const qKey in markingScheme) {
+                    const scheme = markingScheme[qKey];
+                    const qNum = parseInt(qKey.substring(1));
+                    if (!minQuestionPerSubject[scheme.subject] || qNum < minQuestionPerSubject[scheme.subject]) {
+                        minQuestionPerSubject[scheme.subject] = qNum;
+                    }
+                }
+                const orderedSubjects = [...uniqueSubjects].sort((a, b) => (minQuestionPerSubject[a] || 999) - (minQuestionPerSubject[b] || 999));
+
                 
                 const pdfColumns = [];
                 const chunkSize = 45;
@@ -2817,7 +2939,7 @@
                 pdfColumns.forEach(columnData => {
                     contentHTML += `<div class="pdf-subject-column"><h3>${columnData.subjectName}</h3>`;
                     
-                    const tableHeader = isCompactView 
+                    const tableHeader = useCompactColumns
                         ? `<thead><tr><th>Q.No.</th><th>Response</th></tr></thead>`
                         : `<thead><tr><th>Q.No.</th><th>Response</th><th>Correct Answer</th><th>Status</th></tr></thead>`;
                     
@@ -2832,13 +2954,11 @@
                         const questionInfoFromScheme = markingScheme[questionInSubject.qKey];
                         if (!questionInfoFromScheme) return;
 
-                        if (['mm', 'cm'].includes(String(questionInfoFromScheme.questionType || '').toLowerCase())) {
-                            let mmResult = (currentExamType === 'jee' && formatSelector.value.includes('excel')) 
-                                ? compareMMAnswersExcel(correctAnswerForDisplay, questionInSubject.studentResponse)
-                                : compareMMAnswersDat(correctAnswerForDisplay, questionInSubject.studentResponse);
-                            correctAnswerForDisplay = generateGrid(mmResult.correctBlocks, Array(4).fill("correct"));
-                            studentResponseForDisplay = generateGrid(mmResult.studentBlocks, mmResult.rowStatus);
-                        } else if (['id', 'im', 'sint', 'is'].includes(String(questionInfoFromScheme.questionType || '').toLowerCase())) {
+                        // REPLACE WITH THIS
+if (['mm', 'cm'].includes(String(questionInfoFromScheme.questionType || '').toLowerCase())) {
+    // For PDF, do not render grid, show raw text.
+    // The default values assigned above will be used automatically, so this block is left intentionally simple.
+} else if (['id', 'im', 'sint', 'is'].includes(String(questionInfoFromScheme.questionType || '').toLowerCase())) {
                             studentResponseForDisplay = questionInSubject.studentResponse;
                             correctAnswerForDisplay = questionInSubject.correctAnswer;
                         } else if (['sc', 'cs', 'mc', 'mp'].includes(String(questionInfoFromScheme.questionType || '').toLowerCase())) {
@@ -2846,7 +2966,7 @@
                             studentResponseForDisplay = studentResponseForDisplay.toUpperCase().split('').join(',');
                         }
 
-                        if (isCompactView) {
+                        if (useCompactColumns) {
                             contentHTML += `<tr><td>${questionInSubject.qNo}</td><td>${studentResponseForDisplay}</td></tr>`;
                         } else {
                             const studentResult = calculatedResults.find(res => res.frmid === student.frmid);
@@ -2868,7 +2988,7 @@
                         }
                     });
                     
-                    contentHTML += `</tbody></table></div>`; // close pdf-subject-column
+                    contentHTML += `</tbody></table></div>`;
                 });
 
 
@@ -2880,30 +3000,24 @@
 
                 if (i > 0) pdf.addPage();
                 
-                // --- START: Single Page Fit Logic ---
                 const pageHeight = pdf.internal.pageSize.getHeight();
                 const pageWidth = pdf.internal.pageSize.getWidth();
-                const margin = 5; // mm on each side
+                const margin = 5; 
                 
                 const imgProps = pdf.getImageProperties(imgData);
                 
-                // Calculate dimensions to fit width first
                 let finalImgWidth = pageWidth - (margin * 2);
                 let finalImgHeight = (imgProps.height * finalImgWidth) / imgProps.width;
 
-                // Check if it overflows vertically
                 if (finalImgHeight > (pageHeight - (margin * 2))) {
-                    // If it does, recalculate dimensions based on fitting the height
                     finalImgHeight = pageHeight - (margin * 2);
                     finalImgWidth = (imgProps.width * finalImgHeight) / imgProps.height;
                 }
 
-                // Center the image horizontally
                 const xOffset = (pageWidth - finalImgWidth) / 2;
 
                 pdf.addImage(imgData, 'JPEG', xOffset, margin, finalImgWidth, finalImgHeight);
-                // --- END: Single Page Fit Logic ---
-                
+
                 document.body.removeChild(pdfContentDiv);
             }
             pdf.save(`${getFormattedTestFileName()}_All_Student_Response_Sheets.pdf`);
@@ -2920,6 +3034,12 @@
 
             const headers = ['Sno.', 'Fno.', 'Student Name', 'Batch', ...uniqueSubjects.map(s => `${s.toUpperCase()} (${formatNumberToTwoDecimals(maxMarksBySubject[s])})`), `Total Marks (${formatNumberToTwoDecimals(overallMaxMarks)})`, '%age', 'Rank'];
             
+            const headerGroups = [
+                { name: 'Student Info', span: 4 },
+                { name: 'Subject Scores', span: uniqueSubjects.length },
+                { name: 'Overall Score & Rank', span: 3 }
+            ].filter(g => g.span > 0);
+
             const dataRows = calculatedResults.map((res, index) => {
                 const row = [index + 1, res.frmid, res.studentName, res.batch];
                 uniqueSubjects.forEach(sub => row.push(res.marks_by_subject[sub]));
@@ -2928,7 +3048,7 @@
             });
             
             const finalFileName = `${getFormattedTestFileName()}_Subjective_Results.xlsx`;
-            exportStyledExcel(finalFileName, 'Subjective Summary', title, subtitle, headers, dataRows);
+            exportStyledExcel(finalFileName, 'Subjective Summary', title, subtitle, headers, dataRows, headerGroups);
         }
 
         function downloadSubjectivePdf() {
@@ -2938,7 +3058,9 @@
             
             addStatisticsToPdf(doc);
 
-            const headers = [['Sno.', 'Fno.', 'Student Name', 'Batch', ...uniqueSubjects.map(s => `${s}`), `Total`, '%age', 'Rank']];
+            // REPLACE WITH THIS CODE
+            // REPLACE WITH THIS CODE
+            const headers = [['Sno.', 'Fno.', 'Student Name', 'Batch', ...uniqueSubjects.map(s => `${s.toUpperCase()} (${formatNumberToTwoDecimals(maxMarksBySubject[s])})`), `Total (${formatNumberToTwoDecimals(overallMaxMarks)})`, '%age', 'Rank']];
             const data = calculatedResults.map((res, index) => [
                 index + 1,
                 res.frmid,
@@ -3276,12 +3398,18 @@
             const testName = testNameInput.value.trim();
             const testDate = testDateInput.value ? formatDateToDdMmmYyyy(testDateInput.value) : '';
             
+            const pageWidth = doc.internal.pageSize.getWidth();
+            const margin = 10;
+            
             doc.setFontSize(16);
             doc.setFont("helvetica", "bold");
-            doc.text("Test Results", doc.internal.pageSize.getWidth() / 2, 15, { align: 'center' });
+            doc.text("Test Results", pageWidth / 2, margin + 8, { align: 'center' });
+            
             doc.setFontSize(12);
             doc.setFont("helvetica", "normal");
-            doc.text(`${testName} | ${testDate}`, doc.internal.pageSize.getWidth() / 2, 22, { align: 'center' });
+            doc.text(`${testName} | ${testDate}`, pageWidth / 2, margin + 16, { align: 'center' });
+
+            // Reset font for the table
             doc.setFontSize(9);
         }
 
@@ -3324,6 +3452,8 @@
             processedData: [],
             excelHeaders: [],
             mergerTestInfo: { fullTitle: '', date: '' },
+            totalMaxMarks: 0,
+            totalMarksHeader: '',
             
             init: function() {
                 const self = this;
@@ -3455,6 +3585,11 @@
                 this.mergerTestInfo.fullTitle = testNameInput.value ? `Test Result: ${testNameInput.value}` : `Merged Test Results`;
                 this.mergerTestInfo.date = testDateInput.value ? formatDateToDdMmmYyyy(testDateInput.value) : '';
 
+                const file1MaxMarks = Object.values(file1Subjects).reduce((sum, s) => sum + s.maxMarks, 0);
+                const file2MaxMarks = Object.values(file2Subjects).reduce((sum, s) => sum + s.maxMarks, 0);
+                this.totalMaxMarks = file1MaxMarks + file2MaxMarks;
+                this.totalMarksHeader = `Total Marks (${this.totalMaxMarks})`;
+
                 const file1Map = new Map(file1Data.data.map(row => [String(row['Fno.'] || '').trim(), row]));
                 const file2Map = new Map(file2Data.data.map(row => [String(row['Fno.'] || '').trim(), row]));
                 const allFormNos = new Set([...file1Map.keys(), ...file2Map.keys()]);
@@ -3470,7 +3605,6 @@
                     student['Batch'] = (row1 && row1['Batch']) || (row2 && row2['Batch']) || '';
 
                     let combinedTotalScore = 0;
-                    let combinedMaxMarks = 0;
 
                     Object.keys(file1Subjects).forEach(subjKey => {
                         const score = (row1 && parseFloat(row1[file1Subjects[subjKey].originalHeader])) || 0;
@@ -3490,21 +3624,19 @@
                         const score1 = student[`${tabNum === 1 ? 'OBJ' : 'P1'}-${subjKey} (${max1})`] || 0;
                         const score2 = student[`${tabNum === 1 ? 'SUBJ' : 'P2'}-${subjKey} (${max2})`] || 0;
                         const totalSubjScore = score1 + score2;
-                        const totalSubjMax = max1 + max2;
-
+                        
                         if (commonSubjects.has(subjKey)) {
-                            student[`MERGED-${subjKey} (${totalSubjMax})`] = totalSubjScore;
+                            student[`MERGED-${subjKey} (${max1 + max2})`] = totalSubjScore;
                         }
                         combinedTotalScore += totalSubjScore;
-                        combinedMaxMarks += totalSubjMax;
                     });
                     
-                    student['Total Marks Combined'] = combinedTotalScore;
-                    student['%age'] = (combinedMaxMarks > 0 ? (combinedTotalScore / combinedMaxMarks) * 100 : 0).toFixed(2);
+                    student[this.totalMarksHeader] = combinedTotalScore;
+                    student['%age'] = (this.totalMaxMarks > 0 ? (combinedTotalScore / this.totalMaxMarks) * 100 : 0).toFixed(2);
                     tempData.push(student);
                 });
 
-                const overallRanker = this.rankSorter('Total Marks Combined', []);
+                const overallRanker = this.rankSorter(this.totalMarksHeader, []);
                 tempData.sort(overallRanker);
 
                 const totalStudents = tempData.length;
@@ -3564,7 +3696,7 @@
                 const file1SubjectHeaders = Object.keys(firstStudent).filter(key => key.startsWith('OBJ-') || key.startsWith('P1-')).sort();
                 const file2SubjectHeaders = Object.keys(firstStudent).filter(key => key.startsWith('SUBJ-') || key.startsWith('P2-')).sort();
                 const mergedSubjectHeaders = Object.keys(firstStudent).filter(key => key.startsWith('MERGED-')).sort();
-                const finalHeaders = ['Total Marks Combined', '%age', 'Percentile', 'Rank'];
+                const finalHeaders = [this.totalMarksHeader, '%age', 'Percentile', 'Rank'];
                 
                 this.excelHeaders = ['Sno.', 'Fno.', 'Student Name', 'Batch', ...file1SubjectHeaders, ...file2SubjectHeaders, ...mergedSubjectHeaders, ...finalHeaders];
                 
@@ -3589,7 +3721,6 @@
                 return `Merged_${dateStr}_${batchName}`;
             },
 
-            // --- MODIFIED EXCEL DOWNLOAD FUNCTION FOR MERGER TAB ---
             downloadExcel: function(tabNum) {
                 if (this.processedData.length === 0) return;
                 
@@ -3606,8 +3737,8 @@
                     { name: "Student Info", span: 4 },
                     { name: tabNum === 1 ? 'Objective Score' : 'Paper 1 Score', span: file1Headers.length },
                     { name: tabNum === 1 ? 'Subjective Score' : 'Paper 2 Score', span: file2Headers.length },
-                    { name: 'Combined Score', span: mergedHeaders.length },
-                    { name: 'Overall', span: 4 } // Total, %age, Percentile, Rank
+                    { name: 'Merged Marks', span: mergedHeaders.length },
+                    { name: 'Overall Score & Rank', span: 4 }
                 ].filter(g => g.span > 0);
 
                 const dataRows = this.processedData.map(row => {
@@ -3616,7 +3747,6 @@
 
                 exportStyledExcel(fileName, 'Merged Results', title, subtitle, this.excelHeaders, dataRows, groupHeaders);
             },
-
 
             downloadPDF: function(tabNum) {
                 if (this.processedData.length === 0) return;
@@ -3641,24 +3771,32 @@
                 const file2SubjectHeaders = Object.keys(firstStudent).filter(key => key.startsWith('P2-') || key.startsWith('SUBJ-'));
                 const mergedSubjectHeaders = Object.keys(firstStudent).filter(key => key.startsWith('MERGED-'));
                 
-                let head = [
-                    [
-                        { content: 'Student Info', colSpan: 4, styles: { halign: 'center' } },
-                        { content: tabNum === 1 ? 'Objective Score' : 'Paper 1 Score', colSpan: file1SubjectHeaders.length, styles: { halign: 'center' } },
-                        { content: tabNum === 1 ? 'Subjective Score' : 'Paper 2 Score', colSpan: file2SubjectHeaders.length, styles: { halign: 'center' } },
-                        { content: 'Combined Score', colSpan: mergedSubjectHeaders.length, styles: { halign: 'center' } },
-                        { content: 'Combined Total', colSpan: 1, styles: { halign: 'center' } },
-                        { content: 'Details and Rank', colSpan: 3, styles: { halign: 'center' } }
-                    ],
-                    []
+                const allHeaderGroups = [
+                    { content: 'Student Info', colSpan: 4, styles: { halign: 'center' } },
+                    { content: tabNum === 1 ? 'Objective Score' : 'Paper 1 Score', colSpan: file1SubjectHeaders.length, styles: { halign: 'center' } },
+                    { content: tabNum === 1 ? 'Subjective Score' : 'Paper 2 Score', colSpan: file2SubjectHeaders.length, styles: { halign: 'center' } },
+                    { content: 'Merged Marks', colSpan: mergedSubjectHeaders.length, styles: { halign: 'center' } },
+                    { content: 'Overall Score & Rank', colSpan: 4, styles: { halign: 'center' } }
                 ];
-
+                
+                const finalHeaderGroups = allHeaderGroups.filter(group => group.colSpan > 0);
+                
+                let head = [
+                    finalHeaderGroups,
+                    [] 
+                ];
+                
                 const subHeaders = ['Sno.', 'Fno.', 'Student Name', 'Batch', 
                                     ...file1SubjectHeaders, ...file2SubjectHeaders, ...mergedSubjectHeaders, 
-                                    'Total Marks Combined', '%age', 'Percentile', 'Rank'];
+                                    this.totalMarksHeader, '%age', 'Percentile', 'Rank'];
                                     
                 head[1] = subHeaders.map(h => {
                     let header = h;
+
+                    if (header === this.totalMarksHeader) {
+                        return `Total Marks\n(${this.totalMaxMarks})`;
+                    }
+
                     if (tabNum === 1) header = header.replace(/OBJ-|SUBJ-|MERGED-/g, '');
                     else if (tabNum === 2) header = header.replace(/P1-|P2-|MERGED-/g, '');
                     const match = header.match(/(.+?)\s*\((\d+(?:\.\d+)?)\)/);
@@ -3701,8 +3839,22 @@
                 document.getElementById(e.target.dataset.tab).classList.add('active');
             });
         });
+         document.querySelectorAll('input[type="date"]').forEach(input => {
+            input.addEventListener('change', (e) => {
+                if (e.target.value) {
+                    e.target.classList.add('has-value');
+                } else {
+                    e.target.classList.remove('has-value');
+                }
+            });
+             if (input.value) {
+                 input.classList.add('has-value');
+             }
+        });
     });
 </script>
+
 </body>
 </html>
+
 
