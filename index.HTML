@@ -1,1 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>मेरी सभी फ़ाइलें</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #fbbc04;
+            --bg-body: #FAFBFF;
+            --bg-card: #ffffff;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        .header h1 {
+            font-weight: 800;
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+        }
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            list-style: none;
+            padding: 0;
+        }
+        .file-item {
+            background-color: #eef2ff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
+            position: relative;
+        }
+        .file-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            background-color: #f6f8ff;
+        }
+        .file-item a {
+            text-decoration: none;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .file-item .file-details {
+            flex-grow: 1;
+        }
+        .file-item .file-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        .file-item p {
+            margin: 0;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+        .file-icon {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .file-icon::before {
+            content: "📑";
+            display: block;
+        }
+
+        .file-item.dat-to-excel .file-icon::before { content: "📁"; }
+        .file-item.bulk-creater .file-icon::before { content: "📋"; }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+            .file-item a {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>प्रोजेक्ट्स</h1>
+            <p>अपनी परियोजनाओं तक पहुँचने के लिए नीचे दिए गए कार्ड्स पर क्लिक करें।</p>
+        </div>
+        <ul class="file-grid">
+            <li class="file-item">
+                <a href="race.html">
+                    <div class="file-details">
+                        <div class="file-name">Test-Manager-Race</div>
+                        <p>छात्रों के परिणामों का विश्लेषण करने और रिपोर्ट बनाने के लिए एक व्यापक टूल।</p>
+                    </div>
+                    <div class="file-icon"></div>
+                </a>
+            </li>
+            <li class="file-item dat-to-excel">
+                <a href="jee-dat-to-excel.html">
+                    <div class="file-details">
+                        <div class="file-name">DAT TO EXCEL-JEE</div>
+                        <p>JEE DAT फ़ाइलों को Excel प्रारूप में बदलने का एक तेज़ और कुशल तरीका।</p>
+                    </div>
+                    <div class="file-icon"></div>
+                </a>
+            </li>
+            <li class="file-item dat-to-excel">
+                <a href="NEET-dat-to-excel.html">
+                    <div class="file-details">
+                        <div class="file-name">DAT TO EXCEL-NEET</div>
+                        <p>NEET DAT फ़ाइलों को Excel प्रारूप में बदलने के लिए एक विशिष्ट उपकरण।</p>
+                    </div>
+                    <div class="file-icon"></div>
+                </a>
+            </li>
+            <li class="file-item bulk-creater">
+                <a href="NEET_Bulk_Test_scheduling.html">
+                    <div class="file-details">
+                        <div class="file-name">NEET Bulk Test File Creator</div>
+                        <p>NEET परीक्षाओं के लिए बड़े पैमाने पर टेस्ट फ़ाइलें बनाने में सहायता करता है।</p>
+                    </div>
+                    <div class="file-icon"></div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
 
