@@ -1,214 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects - Dinesh</title>
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #fbbc04;
-            --secondary-color: #003366;
-            --bg-body: #121212;
-            --bg-card: #1f1f1f;
-            --text-light: #b3b3b3;
-            --text-dark: #ffffff;
-            --border-color: #333333;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects - Dinesh</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #003366;
+      --secondary: #fbbc04;
+      --bg: #f3f4f6;
+      --card-bg: rgba(255, 255, 255, 0.9);
+      --text-dark: #1f2937;
+      --text-light: #6b7280;
+      --shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      --shadow-hover: 0 16px 35px rgba(0, 0, 0, 0.15);
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 2rem;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #eef2f7, #ffffff);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 3rem 1rem;
+    }
 
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
+    .container {
+      width: 100%;
+      max-width: 1100px;
+    }
 
-        .header h1 {
-            font-weight: 800;
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin: 0;
-            letter-spacing: -1px;
-            position: relative;
-            display: inline-block;
-        }
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
 
-        .header h1::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            bottom: -10px;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background-color: var(--primary-color);
-            border-radius: 2px;
-        }
+    .header h1 {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 0.8rem;
+      position: relative;
+      display: inline-block;
+    }
 
-        .header p {
-            font-size: 1.2rem;
-            color: var(--text-light);
-            margin: 1.5rem 0 0;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+    .header h1::after {
+      content: '';
+      display: block;
+      margin: 0.5rem auto 0;
+      width: 70px;
+      height: 4px;
+      background: var(--secondary);
+      border-radius: 2px;
+    }
 
-        .file-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
+    .header p {
+      font-size: 1.1rem;
+      color: var(--text-light);
+    }
 
-        .file-item {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            text-align: center;
-        }
-        
-        .file-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
-            background-color: #2a2a2a;
-        }
-        
-        .file-item a {
-            padding: 2.5rem 1.5rem;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100%;
-            box-sizing: border-box;
-            color: var(--text-dark);
-        }
+    .file-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      list-style: none;
+      padding: 0;
+    }
 
-        .file-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            line-height: 1;
-            width: fit-content;
-            transition: transform 0.3s ease;
-        }
-        
-        .file-item:hover .file-icon {
-            transform: scale(1.1);
-        }
+    .file-item {
+      background: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 2rem 1.5rem;
+      backdrop-filter: blur(8px);
+      transition: all 0.35s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
 
-        .file-name {
-            font-weight: 800;
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            line-height: 1.3;
-        }
+    .file-item:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: var(--shadow-hover);
+    }
 
-        .file-item p {
-            margin: 0;
-            font-size: 0.9rem;
-            font-weight: 400;
-            color: var(--text-light);
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .file-item.test-manager .file-icon { color: #f5365c; }
-        .file-item.dat-to-excel-jee .file-icon { color: #3ec1d3; }
-        .file-item.dat-to-excel-neet .file-icon { color: #fbbc04; }
-        .file-item.bulk-creater .file-icon { color: #a162f7; }
+    .file-item a {
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
 
-        @media (max-width: 600px) {
-            body {
-                padding: 1rem;
-            }
-            .container {
-                padding: 2rem 1.5rem;
-            }
-            .header h1 {
-                font-size: 2.2rem;
-            }
-            .header p {
-                font-size: 1rem;
-            }
-            .file-grid {
-                gap: 1.5rem;
-            }
-        }
-    </style>
+    .file-icon {
+      font-size: 2.8rem;
+      margin-bottom: 1.2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .file-item:hover .file-icon {
+      transform: rotate(-10deg) scale(1.1);
+    }
+
+    .file-name {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .file-item p {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      line-height: 1.4;
+      flex-grow: 1;
+    }
+
+    /* Accent colors */
+    .test-manager .file-icon { color: #f5365c; }
+    .dat-to-excel-jee .file-icon { color: #3ec1d3; }
+    .dat-to-excel-neet .file-icon { color: #fbbc04; }
+    .bulk-creater .file-icon { color: #a162f7; }
+
+    @media (max-width: 600px) {
+      .header h1 { font-size: 2rem; }
+      .header p { font-size: 1rem; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Projects</h1>
-            <p>Click on the tiles below to access your applications.</p>
-        </div>
-        <ul class="file-grid">
-            <li class="file-item test-manager">
-                <a href="race.html">
-                    <div class="file-icon">⚡</div>
-                    <div class="file-details">
-                        <div class="file-name">Test-Manager-Race</div>
-                        <p>A comprehensive tool for analyzing student results and generating detailed reports.</p>
-                    </div>
-                </a>
-            </li>
-            <li class="file-item dat-to-excel-jee">
-                <a href="jee-dat-to-excel.html">
-                    <div class="file-icon">📄</div>
-                    <div class="file-details">
-                        <div class="file-name">DAT TO EXCEL-JEE</div>
-                        <p>A quick and efficient way to convert JEE DAT files into a structured Excel format.</p>
-                    </div>
-                </a>
-            </li>
-            <li class="file-item dat-to-excel-neet">
-                <a href="NEET-dat-to-excel.html">
-                    <div class="file-icon">📈</div>
-                    <div class="file-details">
-                        <div class="file-name">DAT TO EXCEL-NEET</div>
-                        <p>A specific tool for converting NEET DAT files to an Excel format for easy analysis.</p>
-                    </div>
-                </a>
-            </li>
-            <li class="file-item bulk-creater">
-                <a href="NEET_Bulk_Test_scheduling.html">
-                    <div class="file-icon">🚀</div>
-                    <div class="file-details">
-                        <div class="file-name">NEET Bulk Test File Creator</div>
-                        <p>Assists in creating bulk test files for NEET examinations to streamline the process.</p>
-                    </div>
-                </a>
-            </li>
-        </ul>
+  <div class="container">
+    <div class="header">
+      <h1>Projects</h1>
+      <p>Click on the cards below to open your applications</p>
     </div>
+    <ul class="file-grid">
+      <li class="file-item test-manager">
+        <a href="race.html">
+          <div class="file-icon">⚡</div>
+          <div class="file-name">Test-Manager-Race</div>
+          <p>Analyze student results and generate detailed reports easily.</p>
+        </a>
+      </li>
+      <li class="file-item dat-to-excel-jee">
+        <a href="jee-dat-to-excel.html">
+          <div class="file-icon">📄</div>
+          <div class="file-name">DAT TO EXCEL - JEE</div>
+          <p>Convert JEE DAT files into structured Excel format quickly.</p>
+        </a>
+      </li>
+      <li class="file-item dat-to-excel-neet">
+        <a href="NEET-dat-to-excel.html">
+          <div class="file-icon">📈</div>
+          <div class="file-name">DAT TO EXCEL - NEET</div>
+          <p>Convert NEET DAT files into Excel format for easy analysis.</p>
+        </a>
+      </li>
+      <li class="file-item bulk-creater">
+        <a href="NEET_Bulk_Test_scheduling.html">
+          <div class="file-icon">🚀</div>
+          <div class="file-name">NEET Bulk Test File Creator</div>
+          <p>Create bulk test files for NEET examinations with ease.</p>
+        </a>
+      </li>
+    </ul>
+  </div>
 </body>
 </html>
