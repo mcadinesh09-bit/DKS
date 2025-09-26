@@ -7,14 +7,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #003366;
-      --secondary: #fbbc04;
-      --bg: #f3f4f6;
-      --card-bg: rgba(255, 255, 255, 0.9);
       --text-dark: #1f2937;
-      --text-light: #6b7280;
-      --shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-      --shadow-hover: 0 16px 35px rgba(0, 0, 0, 0.15);
+      --text-light: #f9fafb;
+      --shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      --shadow-hover: 0 16px 35px rgba(0, 0, 0, 0.2);
     }
 
     * {
@@ -25,8 +21,7 @@
 
     body {
       font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #eef2f7, #ffffff);
-      color: var(--text-dark);
+      background: linear-gradient(135deg, #eef2ff, #e0f7fa, #fff);
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -45,27 +40,18 @@
     }
 
     .header h1 {
-      font-size: 2.8rem;
+      font-size: 2.5rem;
       font-weight: 800;
-      color: var(--primary);
-      margin-bottom: 0.8rem;
-      position: relative;
-      display: inline-block;
-    }
-
-    .header h1::after {
-      content: '';
-      display: block;
-      margin: 0.5rem auto 0;
-      width: 70px;
-      height: 4px;
-      background: var(--secondary);
-      border-radius: 2px;
+      text-transform: uppercase;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
     }
 
     .header p {
-      font-size: 1.1rem;
-      color: var(--text-light);
+      font-size: 1rem;
+      font-weight: 500;
+      color: #555;
+      text-transform: none;
     }
 
     .file-grid {
@@ -77,15 +63,12 @@
     }
 
     .file-item {
-      background: var(--card-bg);
       border-radius: 16px;
       box-shadow: var(--shadow);
       padding: 2rem 1.5rem;
-      backdrop-filter: blur(8px);
       transition: all 0.35s ease;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
+      color: var(--text-light);
+      text-align: left;
     }
 
     .file-item:hover {
@@ -102,37 +85,46 @@
     }
 
     .file-icon {
-      font-size: 2.8rem;
-      margin-bottom: 1.2rem;
-      transition: transform 0.3s ease;
-    }
-
-    .file-item:hover .file-icon {
-      transform: rotate(-10deg) scale(1.1);
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
     }
 
     .file-name {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
+      text-transform: uppercase;
       margin-bottom: 0.5rem;
     }
 
     .file-item p {
       font-size: 0.95rem;
-      color: var(--text-light);
+      font-weight: 400;
+      text-transform: none;
       line-height: 1.4;
-      flex-grow: 1;
     }
 
-    /* Accent colors */
-    .test-manager .file-icon { color: #f5365c; }
-    .dat-to-excel-jee .file-icon { color: #3ec1d3; }
-    .dat-to-excel-neet .file-icon { color: #fbbc04; }
-    .bulk-creater .file-icon { color: #a162f7; }
+    /* Colorful gradients for each card */
+    .test-manager {
+      background: linear-gradient(135deg, #ff6a6a, #ff3c78);
+    }
+
+    .dat-to-excel-jee {
+      background: linear-gradient(135deg, #36d1dc, #5b86e5);
+    }
+
+    .dat-to-excel-neet {
+      background: linear-gradient(135deg, #f7971e, #ffd200);
+      color: #222;
+    }
+
+    .bulk-creater {
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      color: #222;
+    }
 
     @media (max-width: 600px) {
       .header h1 { font-size: 2rem; }
-      .header p { font-size: 1rem; }
+      .header p { font-size: 0.95rem; }
     }
   </style>
 </head>
